@@ -39,7 +39,7 @@ public class PieceManager : MonoBehaviour
         {
             _selectedPieceIndex = index;
             _pieces[_selectedPieceIndex].transform.SetParent(transformSelectedPieces);
-            _pieces[_selectedPieceIndex].MovePosition(ClampVector2Int(CanvasMain.MousePosition.Value));
+            _pieces[_selectedPieceIndex].SetPosition(ClampVector2Int(CanvasMain.MousePosition.Value));
         }).AddTo(gameObject);
 
         eventTriggerScrollBar.OnPointerDownAsObservable().Subscribe(_ =>
@@ -59,7 +59,7 @@ public class PieceManager : MonoBehaviour
         
         CanvasMain.MousePosition.Where(_ => _selectedPieceIndex >= 0).Subscribe(position =>
         {
-            _pieces[_selectedPieceIndex].MovePosition(ClampVector2Int(position));
+            _pieces[_selectedPieceIndex].SetPosition(ClampVector2Int(position));
         }).AddTo(gameObject);
 
         CanvasMain.MousePosition.Where(_ => _isPieceDeckScrolled).Subscribe(position =>
@@ -80,9 +80,8 @@ public class PieceManager : MonoBehaviour
             {
                 _pieces.Add(Instantiate(prefabPiece, transformScrollablePieces).GetComponent<Piece>());
                 _pieces[i].SetIndex(i);
-                var positionX = i * (PieceModel.MaxPieceSizeX.Value + 2) - offset;
-                Debug.Log(positionX);
-                _pieces[i].MovePosition(new Vector2Int(positionX, 0));
+                _pieces[i].SetControllable(true);
+                _pieces[i].SetPosition(new Vector2Int(i * (PieceModel.MaxPieceSizeX.Value + 2) - offset, 0));
             }
 
             _maxSizeOfPieceDeck = (PieceModel.MaxPieceSizeX.Value + 2) * amount + 20;
@@ -102,7 +101,17 @@ public class PieceManager : MonoBehaviour
             .Where(_ => _selectedPieceIndex >= 0)
             .Subscribe(_ =>
             {
-                _pieces[_selectedPieceIndex].transform.SetParent(transformIndependentPieces);
+                if (PieceModel.PutPiece(_selectedPieceIndex, CanvasMain.MousePosition.Value))
+                {
+                    _pieces[_selectedPieceIndex].SetPosition(PieceModel.PicturePiecePositions.Value[_selectedPieceIndex]);
+                    _pieces[_selectedPieceIndex].transform.SetParent(transformPanelPieces);
+                    _pieces[_selectedPieceIndex].SetControllable(false);
+                    Debug.Log("ぱちっ！");
+                }
+                else
+                {
+                    _pieces[_selectedPieceIndex].transform.SetParent(transformIndependentPieces);
+                }
                 _selectedPieceIndex = -1;
             }).AddTo(gameObject);
 

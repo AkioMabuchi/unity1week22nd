@@ -6,6 +6,9 @@ using UnityEngine;
 
 public static class PieceModel
 {
+    private const int PictureOffsetX = 0;
+    private const int PictureOffsetY = 8;
+    
     private static readonly ReactiveProperty<int[]> _pieceMap = new(Array.Empty<int>());
     private static readonly ReactiveProperty<int> _maxPieceSizeX = new();
     public static IReadOnlyReactiveProperty<int> MaxPieceSizeX => _maxPieceSizeX;
@@ -15,10 +18,16 @@ public static class PieceModel
     private static readonly ReactiveProperty<int> _pieceAmount = new(0);
     public static IReadOnlyReactiveProperty<int> PieceAmount => _pieceAmount;
     private static readonly ReactiveProperty<Texture2D[]> _pieceTextures = new(Array.Empty<Texture2D>());
-    public static IReadOnlyReactiveProperty<Texture2D[]> PieceTextures => _pieceTextures; 
+    public static IReadOnlyReactiveProperty<Texture2D[]> PieceTextures => _pieceTextures;
+    private static readonly ReactiveProperty<Vector2Int[]> _picturePiecePositions = new(Array.Empty<Vector2Int>());
+    public static IReadOnlyReactiveProperty<Vector2Int[]> PicturePiecePositions => _picturePiecePositions;
 
+    private static readonly List<List<int>> _neighbourPieces = new();
+    public static IReadOnlyList<IReadOnlyList<int>> NeighbourPieces => _neighbourPieces;
+    private static readonly List<bool> _canPutPieces = new();
     public static void GeneratePieces(PictureInfo picture)
     {
+        var amount = picture.sizeX * picture.sizeY;
         var pieceSizeX = picture.texture.width / picture.sizeX;
         var pieceSizeY = picture.texture.height / picture.sizeY;
         var maxPieceSizeX = pieceSizeX >= 16 ? pieceSizeX + 6 : pieceSizeX + 4;
@@ -109,8 +118,66 @@ public static class PieceModel
             pieceTextures[index].SetPixel(texX, texY, colorMap[i]);
         }
 
+        var picturePiecePositions = new Vector2Int[picture.sizeX * picture.sizeY];
+        for (var i = 0; i < picturePiecePositions.Length; i++)
+        {
+            var x = i % picture.sizeX;
+            var y = i / picture.sizeX;
+            var posX = x * pieceSizeX - (picture.texture.width - pieceSizeX) / 2 + PictureOffsetX;
+            var posY = y * pieceSizeY - (picture.texture.height - pieceSizeY) / 2 + PictureOffsetY;
+            picturePiecePositions[i] = new Vector2Int(posX, posY);
+            Debug.Log(picturePiecePositions[i]);
+        }
+        _neighbourPieces.Clear();
+        _canPutPieces.Clear();
+        for (var i = 0; i < amount; i++)
+        {
+            _neighbourPieces.Add(new List<int>());
+            var x = i % picture.sizeX;
+            var y = i / picture.sizeX;
+            if (x > 0)
+            {
+                _neighbourPieces[i].Add(i - 1);
+            }
+
+            if (x < picture.sizeX - 1)
+            {
+                _neighbourPieces[i].Add(i + 1);
+            }
+
+            if (y > 0)
+            {
+                _neighbourPieces[i].Add(i - picture.sizeX);
+            }
+
+            if (y < picture.sizeY - 1)
+            {
+                _neighbourPieces[i].Add(i + picture.sizeX);
+            }
+
+            _canPutPieces.Add(_neighbourPieces[i].Count == 2);
+            Debug.Log(i + "," + _neighbourPieces[i].Count);
+        }
+        _picturePiecePositions.Value = picturePiecePositions;
+
         _maxPieceSizeX.Value = maxPieceSizeX;
         _pieceAmount.Value = pieceAmount;
         _pieceTextures.Value = pieceTextures;
+    }
+
+    public static bool PutPiece(int index, Vector2Int position)
+    {
+        var basePosition = _picturePiecePositions.Value[index];
+        if (_canPutPieces[index] && Math.Abs(basePosition.x - position.x) <= 3 &&
+            Math.Abs(basePosition.y - position.y) <= 3)
+        {
+            foreach (var neighbourPiece in _neighbourPieces[index])
+            {
+                _canPutPieces[neighbourPiece] = true;
+            }
+            return true;
+        }
+
+        return false;
     }
 }

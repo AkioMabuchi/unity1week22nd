@@ -12,9 +12,11 @@ public class Piece : MonoBehaviour
     [SerializeField] private ObservableEventTrigger eventTrigger;
 
     private int _index;
+    private bool _isControllable;
+    
     private void Awake()
     {
-        eventTrigger.OnPointerDownAsObservable().Subscribe(_ =>
+        eventTrigger.OnPointerDownAsObservable().Where(_ => _isControllable).Subscribe(_ =>
         {
             PieceManager.OnPointerDownPiece(_index);
         }).AddTo(gameObject);
@@ -24,6 +26,11 @@ public class Piece : MonoBehaviour
     {
         _index = index;
     }
+
+    public void SetControllable(bool controllable)
+    {
+        _isControllable = controllable;
+    }
     public void SetTexture(Texture2D texture2D)
     {
         texture2D.Apply();
@@ -31,7 +38,7 @@ public class Piece : MonoBehaviour
         rawImage.SetNativeSize();
     }
 
-    public void MovePosition(Vector2Int position)
+    public void SetPosition(Vector2Int position)
     {
         var t = transform;
         var localPosition = t.localPosition;
