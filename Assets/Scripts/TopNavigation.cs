@@ -31,9 +31,19 @@ public class TopNavigation : MonoBehaviour
     [SerializeField] private GameObject contents;
     [SerializeField] private TextMeshProUGUI textMeshProTime;
     [SerializeField] private TextMeshProUGUI textMeshProTitle;
-
+    [SerializeField] private TextMeshProUGUI textMeshProPiece;
     private void Awake()
     {
+        PieceManager.PieceNum.Subscribe(pieceNum =>
+        {
+            textMeshProPiece.text = PieceManager.PutPieceNum.Value + "/" + pieceNum;
+        }).AddTo(gameObject);
+
+        PieceManager.PutPieceNum.Subscribe(putPieceNum =>
+        {
+            textMeshProPiece.text = putPieceNum + "/" + PieceManager.PieceNum.Value;
+        }).AddTo(gameObject);
+        
         MainTimer.Count.Subscribe(time =>
         {
             var minute = (time / 3000 % 100).ToString("D2");

@@ -38,6 +38,11 @@ public class PieceManager : MonoBehaviour
     private static readonly Subject<string> _onSave = new();
     private static readonly Subject<Unit> _onClearPieces = new();
 
+    private static readonly ReactiveProperty<int> _pieceNum = new(0);
+    public static IReadOnlyReactiveProperty<int> PieceNum => _pieceNum;
+    private static readonly ReactiveProperty<int> _putPieceNum = new(0);
+    public static IReadOnlyReactiveProperty<int> PutPieceNum => _putPieceNum;
+
     public static void GeneratePieces(PictureInfo picture)
     {
         _onGeneratePieces.OnNext(picture);
@@ -286,12 +291,18 @@ public class PieceManager : MonoBehaviour
 
             _maxSizeOfPieceDeck = (_maxPieceSizeX + 2) * amount + 20;
             UpdateScroll(-140);
+
+            _putPieceNum.Value = 0;
+            _pieceNum.Value = amount;
         }).AddTo(gameObject);
 
         _onLoadPieces.Subscribe(tuple =>
         {
             transformScrollablePieces.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
             var (picture, saveData) = tuple;
+            
+            _putPieceNum.Value = 0;
+            _pieceNum.Value = picture.sizeX * picture.sizeY; 
             _pieceMap.Clear();
             _colorMap.Clear();
 
@@ -377,6 +388,7 @@ public class PieceManager : MonoBehaviour
                     }
                     case 2: // パネルにある
                     {
+                        _putPieceNum.Value++;
                         _pieces[i].SetControllable(false);
                         _pieces[i].transform.SetParent(transformPanelPieces);
                         break;
@@ -482,7 +494,7 @@ public class PieceManager : MonoBehaviour
 
                     _pieceStatus[_selectedPieceIndex].ownedStatus = 2; // 2 = パネルに置かれている
                     Debug.Log("ぱちっ！");
-
+                    _putPieceNum.Value++;
                     var isFinish = true;
                     foreach (var pieceStatus in _pieceStatus)
                     {
