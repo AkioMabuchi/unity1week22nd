@@ -15,8 +15,8 @@ MonoBehaviour:
   settings:
     _location: 0
     path: SaveFile.es3
-    encryptionType: 0
-    compressionType: 0
+    encryptionType: 1
+    compressionType: 1
     encryptionPassword: password
     directory: 0
     format: 0
@@ -30,14 +30,14 @@ MonoBehaviour:
     serializationDepthLimit: 64
     assemblyNames:
     - Assembly-CSharp-firstpass
-    - Assembly-CSharp
     - UniRx
+    - Assembly-CSharp
     - UniRx.Examples
     - PsdPlugin
     - PPv2URPConverters
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
-  autoUpdateReferences: 1
+  autoUpdateReferences: 0
   addAllPrefabsToManager: 1
   logDebugInfo: 0
   logWarnings: 1

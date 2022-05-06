@@ -9,11 +9,14 @@ public class PictureInfo
     public Texture2D texture;
     public int sizeX;
     public int sizeY;
+    public string name;
+    public string title;
+    public string author;
 }
 
 [CreateAssetMenu(menuName = "ScriptableObjects/PictureData")]
 public class PictureData : ScriptableObject
 {
     [SerializeField] private List<PictureInfo> pictures;
-    public IEnumerable<PictureInfo> Pictures => pictures;
+    public IReadOnlyList<PictureInfo> Pictures => pictures;
 }

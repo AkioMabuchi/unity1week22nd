@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
-public class MainScreen : MonoBehaviour
+public class TitleScreen : MonoBehaviour
 {
-
+    
 }

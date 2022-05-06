@@ -1,4 +1,28 @@
 public enum GameStateName
 {
-    Start
+    Start,
+    WaitForStoryDialog,
+    StoryDialog,
+    TitleScreen,
+    ScrollToSelectScreenFromTitleScreen,
+    ScrollToTitleScreenFromSelectScreen,
+    SelectScreen,
+    ScrollAtSelectScreen,
+    ConfirmLoadPicture,
+    MoveToMainScreen,
+    ReadyToMainScreen,
+    MainScreen,
+    MainScreenPuzzleFinish,
+    WaitForFadeInBackScreenForFinish,
+    ShowDownFinishExpression,
+    WaitFinishExpression,
+    HideUpFinishExpression,
+    TweetDialogAtFinishPuzzle,
+    WaitForSendableRecordsDialog,
+    SendableRecordsDialog,
+    WaitForOpenTheDoorDialog,
+    OpenTheDoorDialog,
+    FadeOutDialogForSelectScreen,
+    ReturnToSelectScreenFromMainScreen1,
+    ReturnToSelectScreenFromMainScreen2
 }
