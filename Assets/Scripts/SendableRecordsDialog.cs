@@ -38,11 +38,19 @@ public class SendableRecordsDialog : MonoBehaviour
     [SerializeField] private CanvasGroup contents;
     [SerializeField] private TMP_InputField inputFieldPlayerName;
     [SerializeField] private ScrollRect scrollRecords;
+    [SerializeField] private TextMeshProUGUI textMeshProTime;
 
     private readonly List<RecordView> _recordViews = new();
 
     private void Awake()
     {
+        MainTimer.Count.Subscribe(time =>
+        {
+            var minute = (time / 3000 % 100).ToString("D2");
+            var second = (time / 50 % 60).ToString("D2");
+            textMeshProTime.text = minute + "'" + second;
+        }).AddTo(gameObject);
+        
         PlayerModel.Name.Subscribe(playerName =>
         {
             inputFieldPlayerName.text = playerName;

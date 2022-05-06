@@ -261,13 +261,27 @@ public class PieceManager : MonoBehaviour
 
 
             var offset = (_maxPieceSizeX + 2) * (amount - 1) / 2;
+            var positionXs = new int[amount];
+            for (var i = 0; i < amount; i++)
+            {
+                positionXs[i] = i * (_maxPieceSizeX + 2) - offset;
+            }
+
+            var xi = amount - 1;
+            while (xi > 0)
+            {
+                var i = UnityEngine.Random.Range(0, xi);
+                (positionXs[i], positionXs[xi]) = (positionXs[xi], positionXs[i]);
+                xi--;
+            }
+            
             for (var i = 0; i < amount; i++)
             {
                 _pieces.Add(Instantiate(prefabPiece, transformScrollablePieces).GetComponent<Piece>());
                 _pieces[i].SetIndex(i);
                 _pieces[i].SetControllable(true);
                 _pieces[i].SetTexture(pieceTextures[i]);
-                _pieces[i].SetPosition(new Vector2Int(i * (_maxPieceSizeX + 2) - offset, 0));
+                _pieces[i].SetPosition(new Vector2Int(positionXs[i], 0));
             }
 
             _maxSizeOfPieceDeck = (_maxPieceSizeX + 2) * amount + 20;

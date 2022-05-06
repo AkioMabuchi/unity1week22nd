@@ -358,8 +358,10 @@ public class GameManager : MonoBehaviour
                     });
                     _actionsBeforeChangeState.Add(() =>
                     {
+                        BackScreen.FadeOut(0.0f);
                         PictureLoadDialog.Hide();
                     });
+                    BackScreen.FadeIn(0.0f);
                     PictureLoadDialog.Show();
                     break;
                 }
