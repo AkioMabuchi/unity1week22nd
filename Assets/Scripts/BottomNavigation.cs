@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UniRx;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ public class BottomNavigation : MonoBehaviour
     private static readonly Subject<Unit> _onHideUIsForSelectScreen = new();
     private static readonly Subject<Unit> _onShowUIsForPieceScroll = new();
     private static readonly Subject<Unit> _onHideUIsForPieceScroll = new();
+
+    private static readonly ReactiveProperty<int> _clearTime = new(-1);
 
     public static void ShowUpContentsMiddle(float duration)
     {
@@ -61,11 +64,16 @@ public class BottomNavigation : MonoBehaviour
         _onHideUIsForPieceScroll.OnNext(Unit.Default);
     }
 
+    public static void SetClearTime(int clearTime)
+    {
+        _clearTime.Value = clearTime;
+    }
+    
     [SerializeField] private GameObject contents;
     [SerializeField] private GameObject titleScreen;
     [SerializeField] private GameObject selectScreen;
     [SerializeField] private GameObject pieceScroll;
-
+    [SerializeField] private TextMeshProUGUI textMeshProClearTime;
     private void Awake()
     {
         _onShowUpContentsMiddle.Subscribe(duration =>
@@ -111,6 +119,20 @@ public class BottomNavigation : MonoBehaviour
         _onHideUIsForPieceScroll.Subscribe(_ =>
         {
             pieceScroll.SetActive(false);
+        }).AddTo(gameObject);
+
+        _clearTime.Subscribe(clearTime =>
+        {
+            if (clearTime < 0)
+            {
+                textMeshProClearTime.text = "--'--";
+            }
+            else
+            {
+                var minute = (clearTime / 3000 % 100).ToString("D2");
+                var second = (clearTime / 50 % 60).ToString("D2");
+                textMeshProClearTime.text = minute + "'" + second;
+            }
         }).AddTo(gameObject);
     }
 

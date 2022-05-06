@@ -75,11 +75,30 @@ public class PictureManager : MonoBehaviour
     
     private static readonly ReactiveProperty<int> _selectedPictureIndex = new(0);
     public static IReadOnlyReactiveProperty<int> SelectedPictureIndex => _selectedPictureIndex;
+    private static readonly ReactiveProperty<bool> _isDoorOpen = new(true);
+    public static IReadOnlyReactiveProperty<bool> IsDoorOpen => _isDoorOpen;
     private static readonly List<int> _picturePositions = new();
     public static IReadOnlyList<int> PicturePositions => _picturePositions;
     private static readonly List<PictureInfo> _pictures = new();
     public static PictureInfo CurrentPicture => _pictures[_selectedPictureIndex.Value];
 
+    private static readonly List<int> _clearTimes = new();
+    public static int CurrentPictureClearTime => _clearTimes[_selectedPictureIndex.Value];
+    public static bool IsComplete {
+        get
+        {
+            var r = true;
+            foreach (var clearTime in _clearTimes)
+            {
+                if (clearTime < 0)
+                {
+                    r = false;
+                }
+            }
+
+            return r;
+        }
+    }
     public static void NextPicture()
     {
         _selectedPictureIndex.Value++;
@@ -88,6 +107,16 @@ public class PictureManager : MonoBehaviour
     public static void PrevPicture()
     {
         _selectedPictureIndex.Value--;
+    }
+
+    public static void SetClearTime(int clearTime)
+    {
+        _clearTimes[_selectedPictureIndex.Value] = clearTime;
+    }
+
+    public static void SetDoorOpen(bool isDoorOpen)
+    {
+        _isDoorOpen.Value = isDoorOpen;
     }
     [SerializeField] private PictureData data;
 
@@ -202,6 +231,7 @@ public class PictureManager : MonoBehaviour
             if (ES3.KeyExists(clearTimeKey))
             {
                 _pictureViews[i].DrawPicture(picture);
+                _clearTimes.Add(ES3.Load<int>(clearTimeKey));
             }
             else
             {
@@ -215,6 +245,9 @@ public class PictureManager : MonoBehaviour
                 {
                     _pictureViews[i].ClearPicture();
                 }
+
+                _isDoorOpen.Value = false;
+                _clearTimes.Add(-1);
             }
 
             _picturePositions.Add(picturePositionX);

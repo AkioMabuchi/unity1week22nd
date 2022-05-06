@@ -26,8 +26,8 @@ MonoBehaviour:
     title: "\u30A2\u30AD\u30AA\u304F\u30932"
     author: Akio
   - texture: {fileID: 2800000, guid: edd8035285a1d4650bf09c772b95e476, type: 3}
-    sizeX: 9
-    sizeY: 9
-    name: test3
+    sizeX: 2
+    sizeY: 3
+    name: test5
     title: "\u30A2\u30AD\u30AA\u304F\u30933"
     author: Akio

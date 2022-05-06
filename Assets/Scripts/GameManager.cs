@@ -65,6 +65,7 @@ public class GameManager : MonoBehaviour
                         }
                         else
                         {
+                            ES3.Save("Story", Unit.Default);
                             _state.Value = GameStateName.WaitForStoryDialog;
                         }
                     });
@@ -123,6 +124,16 @@ public class GameManager : MonoBehaviour
                                     _state.Value = GameStateName.StoryDialog;
                                     break;
                                 }
+                                case "Credits":
+                                {
+                                    _state.Value = GameStateName.CreditsDialog;
+                                    break;
+                                }
+                                case "Settings":
+                                {
+                                    _state.Value = GameStateName.SettingsDialogAtTitleScreen;
+                                    break;
+                                }
                             }
                         }
                     });
@@ -131,6 +142,56 @@ public class GameManager : MonoBehaviour
                         BottomNavigation.HideUIsForTitleScreen();
                     });
                     BottomNavigation.ShowUIsForTitleScreen();
+                    break;
+                }
+                case GameStateName.CreditsDialog:
+                {
+                    _actions.Add(ActionName.OnPointerDownImageButton, obj =>
+                    {
+                        if (obj is string buttonName)
+                        {
+                            switch (buttonName)
+                            {
+                                case "Close":
+                                {
+                                    _state.Value = GameStateName.TitleScreen;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    _actionsBeforeChangeState.Add(() =>
+                    {
+                        BackScreen.FadeOut(0.0f);
+                        CreditsDialog.Hide();
+                    });
+                    BackScreen.FadeIn(0.0f);
+                    CreditsDialog.Show();
+                    break;
+                }
+                case GameStateName.SettingsDialogAtTitleScreen:
+                {
+                    _actions.Add(ActionName.OnPointerDownImageButton, obj =>
+                    {
+                        if (obj is string buttonName)
+                        {
+                            switch (buttonName)
+                            {
+                                case "Close":
+                                {
+                                    _state.Value = GameStateName.TitleScreen;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    _actionsBeforeChangeState.Add(() =>
+                    {
+                        BackScreen.FadeOut(0.0f);
+                        SettingsDialog.Hide();
+                    });
+                    BackScreen.FadeIn(0.0f);
+                    SettingsDialog.Show();
                     break;
                 }
                 case GameStateName.ScrollToSelectScreenFromTitleScreen:
@@ -177,12 +238,14 @@ public class GameManager : MonoBehaviour
                                 {
                                     if (ES3.KeyExists("PictureSave(" + PictureManager.CurrentPicture.name + ")"))
                                     {
+                                        PictureManager.HideImageButtons();
                                         _state.Value = GameStateName.ConfirmLoadPicture;
                                     }
                                     else
                                     {
                                         PictureManager.ClearCurrentPicture();
                                         PictureManager.HideImageButtons();
+                                        MainTimer.SetCount(0);
                                         _state.Value = GameStateName.MoveToMainScreen;
                                     }
                                     break;
@@ -195,6 +258,8 @@ public class GameManager : MonoBehaviour
                                 }
                                 case "Records":
                                 {
+                                    PictureManager.HideImageButtons();
+                                    _state.Value = GameStateName.RecordsDialogAtSelectScreen;
                                     break;
                                 }
                             }
@@ -205,6 +270,7 @@ public class GameManager : MonoBehaviour
                         BottomNavigation.HideUIsForSelectScreen();
                     });
                     BottomNavigation.ShowUIsForSelectScreen();
+                    BottomNavigation.SetClearTime(PictureManager.CurrentPictureClearTime);
                     PictureManager.ShowImageButtons();
                     break;
                 }
@@ -215,6 +281,44 @@ public class GameManager : MonoBehaviour
                         _state.Value = GameStateName.SelectScreen;
                     });
                     MainScroll.Slide(-PictureManager.PicturePositions[PictureManager.SelectedPictureIndex.Value], 1.0f);
+                    break;
+                }
+                case GameStateName.RecordsDialogAtSelectScreen:
+                {
+                    _actions.Add(ActionName.OnPointerDownImageButton, obj =>
+                    {
+                        if (obj is string buttonName)
+                        {
+                            switch (buttonName)
+                            {
+                                case "Close":
+                                {
+                                    _state.Value = GameStateName.SelectScreen;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    _actions.Add(ActionName.OnReceiveRecordsSucceeded, obj =>
+                    {
+                        if (obj is Record[] records)
+                        {
+                            RecordsDialog.UpdateRecords(records);
+                        }
+                    });
+                    _actions.Add(ActionName.OnReceiveRecordsFailed, _ =>
+                    {
+                        Debug.Log("データの受信に失敗");
+                    });
+                    _actionsBeforeChangeState.Add(() =>
+                    {
+                        BackScreen.FadeOut(0.0f);
+                        RecordsDialog.Hide();
+                    });
+                    BackScreen.FadeIn(0.0f);
+                    RecordsDialog.ClearRecords();
+                    RecordsDialog.Show();
+                    RecordManager.ReceiveRecords(PictureManager.CurrentPicture.name);
                     break;
                 }
                 case GameStateName.ConfirmLoadPicture:
@@ -231,6 +335,7 @@ public class GameManager : MonoBehaviour
                                     ES3.DeleteKey(saveKey);
                                     PictureManager.ClearCurrentPicture();
                                     PictureManager.HideImageButtons();
+                                    MainTimer.SetCount(0);
                                     _state.Value = GameStateName.MoveToMainScreen;
                                     break;
                                 }
@@ -239,6 +344,7 @@ public class GameManager : MonoBehaviour
                                     var saveData = ES3.Load<PicturePieceSaveInfo>(saveKey);
                                     PictureManager.DrawCurrentPictureBySaveData(saveData);
                                     PictureManager.HideImageButtons();
+                                    MainTimer.SetCount(saveData.time);
                                     _state.Value = GameStateName.MoveToMainScreen;
                                     break;
                                 }
@@ -279,16 +385,17 @@ public class GameManager : MonoBehaviour
                             var saveData = ES3.Load<PicturePieceSaveInfo>(key);
                             PieceManager.LoadPieces(PictureManager.CurrentPicture, saveData);
                             PictureManager.ClearCurrentPicture();
-                            MainTimer.SetCount(saveData.time);
+
                         }
                         else
                         {
                             PieceManager.GeneratePieces(PictureManager.CurrentPicture);
                             PictureManager.ClearCurrentPicture();
-                            MainTimer.SetCount(0);
+     
                         }
                         _state.Value = GameStateName.MainScreen;
                     });
+                    TopNavigation.SetTitle(PictureManager.CurrentPicture.title);
                     TopNavigation.ShowUpContents(1.0f);
                     BottomNavigation.ShowUpContentsHigh(1.0f);
                     PictureManager.FocusSelectedPicture(1.0f);
@@ -332,6 +439,16 @@ public class GameManager : MonoBehaviour
                                     _state.Value = GameStateName.ReturnToSelectScreenFromMainScreen1;
                                     break;
                                 }
+                                case "Records":
+                                {
+                                    _state.Value = GameStateName.RecordsDialogAtMainScreen;
+                                    break;
+                                }
+                                case "Settings":
+                                {
+                                    _state.Value = GameStateName.SettingsDialogAtMainScreen;
+                                    break;
+                                }
                             }
                         }
                     });
@@ -351,6 +468,7 @@ public class GameManager : MonoBehaviour
                         ES3.Save(clearTimeKey, Math.Min(clearTime, MainTimer.Count.Value));
                         PieceManager.ClearPieces();
                         PictureManager.DrawCurrentPicture();
+                        PictureManager.SetClearTime(MainTimer.Count.Value);
                         _state.Value = GameStateName.MainScreenPuzzleFinish;
                     });
                     _actionsBeforeChangeState.Add(() =>
@@ -360,6 +478,69 @@ public class GameManager : MonoBehaviour
                     });
                     MainTimer.SetActive(true);
                     BottomNavigation.ShowUIsForPieceScroll();
+                    break;
+                }
+                case GameStateName.SettingsDialogAtMainScreen:
+                {
+                    _actions.Add(ActionName.OnPointerDownImageButton, obj =>
+                    {
+                        if (obj is string buttonName)
+                        {
+                            switch (buttonName)
+                            {
+                                case "Close":
+                                {
+                                    _state.Value = GameStateName.MainScreen;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    _actionsBeforeChangeState.Add(() =>
+                    {
+                        BackScreen.FadeOut(0.0f);
+                        SettingsDialog.Hide();
+                    });
+                    BackScreen.FadeIn(0.0f);
+                    SettingsDialog.Show();
+                    break;
+                }
+                case GameStateName.RecordsDialogAtMainScreen:
+                {
+                    _actions.Add(ActionName.OnPointerDownImageButton, obj =>
+                    {
+                        if (obj is string buttonName)
+                        {
+                            switch (buttonName)
+                            {
+                                case "Close":
+                                {
+                                    _state.Value = GameStateName.MainScreen;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    _actions.Add(ActionName.OnReceiveRecordsSucceeded, obj =>
+                    {
+                        if (obj is Record[] records)
+                        {
+                            RecordsDialog.UpdateRecords(records);
+                        }
+                    });
+                    _actions.Add(ActionName.OnReceiveRecordsFailed, _ =>
+                    {
+                        Debug.Log("データの受信に失敗");
+                    });
+                    _actionsBeforeChangeState.Add(() =>
+                    {
+                        BackScreen.FadeOut(0.0f);
+                        RecordsDialog.Hide();
+                    });
+                    BackScreen.FadeIn(0.0f);
+                    RecordsDialog.ClearRecords();
+                    RecordsDialog.Show();
+                    RecordManager.ReceiveRecords(PictureManager.CurrentPicture.name);
                     break;
                 }
                 case GameStateName.MainScreenPuzzleFinish:
@@ -461,13 +642,14 @@ public class GameManager : MonoBehaviour
                                 {
                                     SendableRecordsDialog.ClearRecords();
                                     RecordManager.SendRecord(PlayerModel.Id.Value, PlayerModel.Name.Value,
-                                        PictureManager.CurrentPicture.name, UnityEngine.Random.Range(100, 100000));
+                                        PictureManager.CurrentPicture.name, MainTimer.Count.Value);
                                     break;
                                 }
                                 case "Close":
                                 {
-                                    if (false)
+                                    if (PictureManager.IsComplete && !PictureManager.IsDoorOpen.Value)
                                     {
+                                        PictureManager.SetDoorOpen(true);
                                         _state.Value = GameStateName.WaitForOpenTheDoorDialog;
                                     }
                                     else
@@ -513,6 +695,7 @@ public class GameManager : MonoBehaviour
                     {
                         _state.Value = GameStateName.OpenTheDoorDialog;
                     });
+                    Wait(1.0f);
                     break;
                 }
                 case GameStateName.OpenTheDoorDialog:
@@ -521,9 +704,21 @@ public class GameManager : MonoBehaviour
                     {
                         if (obj is string buttonName)
                         {
-                            
+                            switch (buttonName)
+                            {
+                                case "Close":
+                                {
+                                    _state.Value = GameStateName.FadeOutDialogForSelectScreen;
+                                    break;
+                                }
+                            }
                         }
                     });
+                    _actionsBeforeChangeState.Add(() =>
+                    {
+                        DoorOpenDialog.Hide();
+                    });
+                    DoorOpenDialog.Show();
                     break;
                 }
                 case GameStateName.FadeOutDialogForSelectScreen:
@@ -552,6 +747,11 @@ public class GameManager : MonoBehaviour
                 {
                     _actions.Add(ActionName.OnFinishWait, _ =>
                     {
+                        var clearTimeKey = "PictureClearTime(" + PictureManager.CurrentPicture.name + ")";
+                        if (ES3.KeyExists(clearTimeKey))
+                        {
+                            PictureManager.DrawCurrentPicture();
+                        }
                         _state.Value = GameStateName.SelectScreen;
                     });
                     _actionsBeforeChangeState.Add(() =>

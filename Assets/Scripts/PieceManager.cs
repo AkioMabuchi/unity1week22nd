@@ -418,7 +418,7 @@ public class PieceManager : MonoBehaviour
 
             var saveData = new PicturePieceSaveInfo
             {
-                time = 0,
+                time = MainTimer.Count.Value,
                 pieceSizeX = _pieceSizeX,
                 pieceSizeY = _pieceSizeY,
                 maxPieceSizeX = _maxPieceSizeX,
