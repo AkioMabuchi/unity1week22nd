@@ -31,9 +31,6 @@ public class PieceManager : MonoBehaviour
     private static readonly Subject<PictureInfo> _onGeneratePieces = new();
     private static readonly Subject<(PictureInfo picture, PicturePieceSaveInfo saveData)> _onLoadPieces = new();
     private static readonly Subject<int> _onPointerDownPiece = new();
-    private static readonly Subject<Unit> _onPointerDownScrollLeft = new();
-    private static readonly Subject<Unit> _onPointerDownScrollRight = new();
-    private static readonly Subject<Unit> _onPointerDownScrollBar = new();
     private static readonly Subject<Unit> _onPointerUp = new();
     private static readonly Subject<string> _onSave = new();
     private static readonly Subject<Unit> _onClearPieces = new();
@@ -57,21 +54,6 @@ public class PieceManager : MonoBehaviour
         _onPointerDownPiece.OnNext(index);
     }
 
-    public static void OnPointerDownScrollLeft()
-    {
-        _onPointerDownScrollLeft.OnNext(Unit.Default);
-    }
-
-    public static void OnPointerDownScrollRight()
-    {
-        _onPointerDownScrollRight.OnNext(Unit.Default);
-    }
-
-    public static void OnPointerDownScrollBar()
-    {
-        _onPointerDownScrollBar.OnNext(Unit.Default);
-    }
-
     public static void OnPointerUp()
     {
         _onPointerUp.OnNext(Unit.Default);
@@ -89,18 +71,14 @@ public class PieceManager : MonoBehaviour
     
     [SerializeField] private GameObject prefabPiece;
     [SerializeField] private Transform transformPanelPieces;
-    [SerializeField] private Transform transformScrollablePieces;
     [SerializeField] private Transform transformIndependentPieces;
     [SerializeField] private Transform transformSelectedPieces;
-
+    [SerializeField] private ScrollRect scroll;
     [SerializeField] private Image imageScrollBar;
 
     private readonly List<Piece> _pieces = new();
     private int _selectedPieceIndex = -1;
-
-    private bool _isScrollButtonLeftDown;
-    private bool _isScrollButtonRightDown;
-    private bool _isScrollBarDown;
+    
     private int _maxSizeOfPieceDeck;
     
     private int _maxPieceSizeX;
@@ -116,7 +94,6 @@ public class PieceManager : MonoBehaviour
     {
         _onGeneratePieces.Subscribe(picture =>
         {
-            transformScrollablePieces.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
             var amount = picture.sizeX * picture.sizeY;
             for (var i = 0; i < amount; i++)
             {
@@ -264,12 +241,11 @@ public class PieceManager : MonoBehaviour
                 _pieceStatus[i].ownedStatus = 0;
             }
 
-
-            var offset = (_maxPieceSizeX + 2) * (amount - 1) / 2;
+            
             var positionXs = new int[amount];
             for (var i = 0; i < amount; i++)
             {
-                positionXs[i] = i * (_maxPieceSizeX + 2) - offset;
+                positionXs[i] = i * (_maxPieceSizeX + 2) + (_maxPieceSizeX + 2) / 2;
             }
 
             var xi = amount - 1;
@@ -279,18 +255,21 @@ public class PieceManager : MonoBehaviour
                 (positionXs[i], positionXs[xi]) = (positionXs[xi], positionXs[i]);
                 xi--;
             }
+
+            _maxSizeOfPieceDeck = (_maxPieceSizeX + 2) * amount;
+
+            var sizeDelta = scroll.content.sizeDelta;
+            sizeDelta.x = _maxSizeOfPieceDeck;
+            scroll.content.sizeDelta = sizeDelta;
             
             for (var i = 0; i < amount; i++)
             {
-                _pieces.Add(Instantiate(prefabPiece, transformScrollablePieces).GetComponent<Piece>());
+                _pieces.Add(Instantiate(prefabPiece, scroll.content).GetComponent<Piece>());
                 _pieces[i].SetIndex(i);
                 _pieces[i].SetControllable(true);
                 _pieces[i].SetTexture(pieceTextures[i]);
-                _pieces[i].SetPosition(new Vector2Int(positionXs[i], 0));
+                _pieces[i].SetPosition(new Vector2Int(positionXs[i], -15));
             }
-
-            _maxSizeOfPieceDeck = (_maxPieceSizeX + 2) * amount + 20;
-            UpdateScroll(-140);
 
             _putPieceNum.Value = 0;
             _pieceNum.Value = amount;
@@ -298,7 +277,6 @@ public class PieceManager : MonoBehaviour
 
         _onLoadPieces.Subscribe(tuple =>
         {
-            transformScrollablePieces.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
             var (picture, saveData) = tuple;
             
             _putPieceNum.Value = 0;
@@ -355,6 +333,12 @@ public class PieceManager : MonoBehaviour
                 var texY = mapY - baseY;
                 pieceTextures[index].SetPixel(texX, texY, _colorMap[i]);
             }
+
+            _maxSizeOfPieceDeck = (_maxPieceSizeX + 2) * saveData.pieces.Length;
+
+            var sizeDelta = scroll.content.sizeDelta;
+            sizeDelta.x = _maxSizeOfPieceDeck;
+            scroll.content.sizeDelta = sizeDelta;
             
             for (var i = 0; i < saveData.pieces.Length; i++)
             {
@@ -372,12 +356,13 @@ public class PieceManager : MonoBehaviour
                 _pieces.Add(Instantiate(prefabPiece).GetComponent<Piece>());
                 _pieces[i].SetIndex(i);
                 
+                
                 switch (piece.belongCode)
                 {
                     case 0: // デッキの中
                     {
                         _pieces[i].SetControllable(true);
-                        _pieces[i].transform.SetParent(transformScrollablePieces);
+                        _pieces[i].transform.SetParent(scroll.content);
                         break;
                     }
                     case 1: // 画面上
@@ -401,7 +386,6 @@ public class PieceManager : MonoBehaviour
             }
 
             _maxSizeOfPieceDeck = (_maxPieceSizeX + 2) * saveData.pieces.Length + 20;
-            UpdateScroll(-140);
         }).AddTo(gameObject);
         
         _onPointerDownPiece.Where(_ => _selectedPieceIndex < 0).Subscribe(index =>
@@ -410,25 +394,10 @@ public class PieceManager : MonoBehaviour
             _pieces[_selectedPieceIndex].transform.SetParent(transformSelectedPieces);
             _pieces[_selectedPieceIndex].SetPosition(ClampVector2Int(CanvasMain.MousePosition.Value));
         }).AddTo(gameObject);
-
-        _onPointerDownScrollLeft.Subscribe(_ =>
-        {
-            _isScrollButtonLeftDown = true;
-        }).AddTo(gameObject);
-
-        _onPointerDownScrollRight.Subscribe(_ =>
-        {
-            _isScrollButtonRightDown = true;
-        }).AddTo(gameObject);
-
-        _onPointerDownScrollBar.Subscribe(_ =>
-        {
-            _isScrollBarDown = true;
-        }).AddTo(gameObject);
+        
 
         _onSave.Subscribe(pictureName =>
         {
-            transformScrollablePieces.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
             var pieceSaveInfo = new PieceSaveInfo[_pieces.Count];
             for (var i = 0; i < _pieces.Count; i++)
             {
@@ -472,11 +441,6 @@ public class PieceManager : MonoBehaviour
             _pieces[_selectedPieceIndex].SetPosition(ClampVector2Int(position));
         }).AddTo(gameObject);
 
-        CanvasMain.MousePosition.Where(_ => _isScrollBarDown).Subscribe(position =>
-        {
-            UpdateScroll(Math.Clamp(position.x, -140, 140));
-        }).AddTo(gameObject);
-
 
         _onPointerUp.Subscribe(_ =>
         {
@@ -493,7 +457,7 @@ public class PieceManager : MonoBehaviour
                     }
 
                     _pieceStatus[_selectedPieceIndex].ownedStatus = 2; // 2 = パネルに置かれている
-                    Debug.Log("ぱちっ！");
+                    SoundPlayer.PlaySound("PutPiece");
                     _putPieceNum.Value++;
                     var isFinish = true;
                     foreach (var pieceStatus in _pieceStatus)
@@ -517,37 +481,9 @@ public class PieceManager : MonoBehaviour
             }
 
             _selectedPieceIndex = -1;
-            _isScrollBarDown = false;
-            _isScrollButtonLeftDown = false;
-            _isScrollButtonRightDown = false;
         }).AddTo(gameObject);
-
-        this.FixedUpdateAsObservable()
-            .Where(_ => _isScrollButtonLeftDown)
-            .Subscribe(_ =>
-            {
-                var positionX = (int) imageScrollBar.transform.localPosition.x;
-                positionX = Math.Clamp(positionX - 1, -140, 140);
-                UpdateScroll(positionX);
-            }).AddTo(gameObject);
-
-        this.FixedUpdateAsObservable()
-            .Where(_ => _isScrollButtonRightDown)
-            .Subscribe(_ =>
-            {
-                var positionX = (int) imageScrollBar.transform.localPosition.x;
-                positionX = Math.Clamp(positionX + 1, -140, 140);
-                UpdateScroll(positionX);
-            }).AddTo(gameObject);
     }
-
-    private void UpdateScroll(int positionX)
-    {
-        imageScrollBar.transform.localPosition = new Vector3(positionX, -15.0f, 0.0f);
-        var scrollWidth = _maxSizeOfPieceDeck / 2 - 160;
-        var scrollPositionX = positionX * scrollWidth / -140;
-        transformScrollablePieces.transform.localPosition = new Vector3(scrollPositionX, 0.0f, 0.0f);
-    }
+    
     private static Vector2Int ClampVector2Int(Vector2Int vector2Int)
     {
         var r = vector2Int;

@@ -262,6 +262,14 @@ public class GameManager : MonoBehaviour
                                     _state.Value = GameStateName.RecordsDialogAtSelectScreen;
                                     break;
                                 }
+                                case "Door":
+                                {
+                                    if (PictureManager.IsDoorOpen.Value)
+                                    {
+                                        
+                                    }
+                                    break;
+                                }
                             }
                         }
                     });
@@ -416,21 +424,6 @@ public class GameManager : MonoBehaviour
                         {
                             switch (buttonName)
                             {
-                                case "ScrollButtonLeft":
-                                {
-                                    PieceManager.OnPointerDownScrollLeft();
-                                    break;
-                                }
-                                case "ScrollButtonRight":
-                                {
-                                    PieceManager.OnPointerDownScrollRight();
-                                    break;
-                                }
-                                case "ScrollBar":
-                                {
-                                    PieceManager.OnPointerDownScrollBar();
-                                    break;
-                                }
                                 case "Return":
                                 {
                                     PieceManager.Save(PictureManager.CurrentPicture.name);

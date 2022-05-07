@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PictureManager : MonoBehaviour
 {
@@ -121,12 +122,20 @@ public class PictureManager : MonoBehaviour
     [SerializeField] private PictureData data;
 
     [SerializeField] private GameObject prefabPictureView;
+    [SerializeField] private Sprite spriteDoor;
+    [SerializeField] private Sprite spriteDoorOpen;
     [SerializeField] private Transform transformSelectScreen;
+    [SerializeField] private Image imageDoor;
 
     private readonly List<PictureView> _pictureViews = new();
 
     private void Awake()
     {
+        _isDoorOpen.Subscribe(isDoorOpen =>
+        {
+            imageDoor.sprite = isDoorOpen ? spriteDoorOpen : spriteDoor;
+        }).AddTo(gameObject);
+        
         _onShowImageButtons.Subscribe(_ =>
         {
             _pictureViews[_selectedPictureIndex.Value].ShowImageButtons();
@@ -253,5 +262,7 @@ public class PictureManager : MonoBehaviour
             _picturePositions.Add(picturePositionX);
             picturePositionX += picture.texture.width + 40;
         }
+
+        imageDoor.transform.localPosition = new Vector3(picturePositionX - 50.5f, -24.0f, 0.0f);
     }
 }
