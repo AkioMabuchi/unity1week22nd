@@ -17,8 +17,11 @@ public class BottomNavigation : MonoBehaviour
     private static readonly Subject<Unit> _onHideUIsForSelectScreen = new();
     private static readonly Subject<Unit> _onShowUIsForPieceScroll = new();
     private static readonly Subject<Unit> _onHideUIsForPieceScroll = new();
+    private static readonly Subject<Unit> _onShowUIsForCompleteScreen = new();
+    private static readonly Subject<Unit> _onHideUIsForCompleteScreen = new();
 
     private static readonly ReactiveProperty<int> _clearTime = new(-1);
+    private static readonly ReactiveProperty<int> _completeTime = new(0);
 
     public static void ShowUpContentsMiddle(float duration)
     {
@@ -64,16 +67,33 @@ public class BottomNavigation : MonoBehaviour
         _onHideUIsForPieceScroll.OnNext(Unit.Default);
     }
 
+    public static void ShowUIsForCompleteScreen()
+    {
+        _onShowUIsForCompleteScreen.OnNext(Unit.Default);
+    }
+
+    public static void HideUIsForCompleteScreen()
+    {
+        _onHideUIsForCompleteScreen.OnNext(Unit.Default);
+    }
+
     public static void SetClearTime(int clearTime)
     {
         _clearTime.Value = clearTime;
+    }
+
+    public static void SetCompleteTime(int completeTime)
+    {
+        _completeTime.Value = completeTime;
     }
     
     [SerializeField] private GameObject contents;
     [SerializeField] private GameObject titleScreen;
     [SerializeField] private GameObject selectScreen;
     [SerializeField] private GameObject pieceScroll;
+    [SerializeField] private GameObject completeScreen;
     [SerializeField] private TextMeshProUGUI textMeshProClearTime;
+    [SerializeField] private TextMeshProUGUI textMeshProCompleteTime;
     private void Awake()
     {
         _onShowUpContentsMiddle.Subscribe(duration =>
@@ -121,6 +141,16 @@ public class BottomNavigation : MonoBehaviour
             pieceScroll.SetActive(false);
         }).AddTo(gameObject);
 
+        _onShowUIsForCompleteScreen.Subscribe(_ =>
+        {
+            completeScreen.SetActive(true);
+        }).AddTo(gameObject);
+
+        _onHideUIsForCompleteScreen.Subscribe(_ =>
+        {
+            completeScreen.SetActive(false);
+        }).AddTo(gameObject);
+
         _clearTime.Subscribe(clearTime =>
         {
             if (clearTime < 0)
@@ -134,6 +164,14 @@ public class BottomNavigation : MonoBehaviour
                 textMeshProClearTime.text = minute + "'" + second;
             }
         }).AddTo(gameObject);
+
+        _completeTime.Subscribe(completeTime =>
+        {
+            var hour = (completeTime / 180000 % 100).ToString("D2");
+            var minute = (completeTime / 3000 % 60).ToString("D2");
+            var second = (completeTime / 50 % 60).ToString("D2");
+            textMeshProCompleteTime.text = hour + ":" + minute + "'" + second;
+        }).AddTo(gameObject);
     }
 
     private void Start()
@@ -141,6 +179,7 @@ public class BottomNavigation : MonoBehaviour
         titleScreen.SetActive(false);
         selectScreen.SetActive(false);
         pieceScroll.SetActive(false);
+        completeScreen.SetActive(false);
         contents.transform.localPosition = new Vector3(0.0f, -90.0f, 0.0f);
     }
 }

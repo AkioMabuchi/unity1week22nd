@@ -15,3 +15,23 @@ MonoBehaviour:
   sounds:
   - name: PutPiece
     audioClip: {fileID: 8300000, guid: b8e9e916f32a44be4ac35b87f79bc243, type: 3}
+  - name: Cancel
+    audioClip: {fileID: 8300000, guid: 42cceec467d6c4754aeba9be4ec6eaa9, type: 3}
+  - name: Click
+    audioClip: {fileID: 8300000, guid: 13f244fbc09b14aed83dbeef1464e5ba, type: 3}
+  - name: Decide
+    audioClip: {fileID: 8300000, guid: ba3e94861d9a74994bdf705240a038fc, type: 3}
+  - name: PuzzleClear
+    audioClip: {fileID: 8300000, guid: 16aeb170f4f294eea85108af8d6cfbd3, type: 3}
+  - name: Test
+    audioClip: {fileID: 8300000, guid: 0d58fc0c5ca2d4a11b4f22f736287cf8, type: 3}
+  - name: DoorOpen
+    audioClip: {fileID: 8300000, guid: ac4b11b8aba7e495592b1cd4a57b129c, type: 3}
+  - name: PopUp
+    audioClip: {fileID: 8300000, guid: d73659986f1bc44cabcf46d0894a56a6, type: 3}
+  - name: Close
+    audioClip: {fileID: 8300000, guid: 7fed422ac24604157bd9d57a7428b3d4, type: 3}
+  - name: EnterRoom
+    audioClip: {fileID: 8300000, guid: bce979cc588464b04ac83252c715bb72, type: 3}
+  - name: MovePicture
+    audioClip: {fileID: 8300000, guid: 9baa8c1c8f8ad41cabb22ea60101b215, type: 3}

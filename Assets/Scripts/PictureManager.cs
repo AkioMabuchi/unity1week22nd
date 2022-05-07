@@ -100,6 +100,23 @@ public class PictureManager : MonoBehaviour
             return r;
         }
     }
+
+    public static int CompleteTime
+    {
+        get
+        {
+            var sum = 0;
+            foreach (var time in _clearTimes)
+            {
+                if (time >= 0)
+                {
+                    sum += time;
+                }
+            }
+
+            return sum;
+        }
+    }
     public static void NextPicture()
     {
         _selectedPictureIndex.Value++;

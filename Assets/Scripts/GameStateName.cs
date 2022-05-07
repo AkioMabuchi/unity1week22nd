@@ -18,6 +18,7 @@ public enum GameStateName
     SettingsDialogAtMainScreen,
     RecordsDialogAtMainScreen,
     MainScreenPuzzleFinish,
+    PuzzleFinishEffect,
     WaitForFadeInBackScreenForFinish,
     ShowDownFinishExpression,
     WaitFinishExpression,
@@ -29,5 +30,11 @@ public enum GameStateName
     OpenTheDoorDialog,
     FadeOutDialogForSelectScreen,
     ReturnToSelectScreenFromMainScreen1,
-    ReturnToSelectScreenFromMainScreen2
+    ReturnToSelectScreenFromMainScreen2,
+    LeaveFromSelectScreen,
+    EnterToCompleteScreen,
+    CompleteScreen,
+    LeaveFromCompleteScreen,
+    EnterToSelectScreen,
+    CompleteRecordsDialog
 }

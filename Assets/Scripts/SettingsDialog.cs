@@ -72,12 +72,12 @@ public class SettingsDialog : MonoBehaviour
 
         eventTriggerSliderMaster.OnPointerUpAsObservable().Subscribe(_ =>
         {
-            SoundPlayer.PlaySound("PutPiece");
+            SoundPlayer.PlaySound("Test");
         }).AddTo(gameObject);
 
         eventTriggerSliderSound.OnPointerUpAsObservable().Subscribe(_ =>
         {
-            SoundPlayer.PlaySound("PutPiece");
+            SoundPlayer.PlaySound("Test");
         }).AddTo(gameObject);
     }
 

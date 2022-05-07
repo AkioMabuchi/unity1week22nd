@@ -11,6 +11,23 @@ public class PicturePieceSaveInfo
     public int putRange;
     public int[] pieceMap;
     public PieceSaveInfo[] pieces;
+
+    public int PutPieceNum
+    {
+        get
+        {
+            var r = 0;
+            foreach (var piece in pieces)
+            {
+                if (piece.belongCode == 2)
+                {
+                    r++;
+                }
+            }
+
+            return r;
+        }
+    }
 }
 
 [Serializable]

@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
                 {
                     _actions.Add(ActionName.OnFinishWait, _ =>
                     {
+                        SoundPlayer.PlaySound("PopUp");
                         _state.Value = GameStateName.StoryDialog;
                     });
                     Wait(1.0f);
@@ -91,6 +92,7 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Close");
                                     _state.Value = GameStateName.TitleScreen;
                                     break;
                                 }
@@ -116,21 +118,25 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Screen":
                                 {
+                                    SoundPlayer.PlaySound("EnterRoom");
                                     _state.Value = GameStateName.ScrollToSelectScreenFromTitleScreen;
                                     break;
                                 }
                                 case "Story":
                                 {
+                                    SoundPlayer.PlaySound("PopUp");
                                     _state.Value = GameStateName.StoryDialog;
                                     break;
                                 }
                                 case "Credits":
                                 {
+                                    SoundPlayer.PlaySound("PopUp");
                                     _state.Value = GameStateName.CreditsDialog;
                                     break;
                                 }
                                 case "Settings":
                                 {
+                                    SoundPlayer.PlaySound("PopUp");
                                     _state.Value = GameStateName.SettingsDialogAtTitleScreen;
                                     break;
                                 }
@@ -154,6 +160,13 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Close");
+                                    _state.Value = GameStateName.TitleScreen;
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
                                     _state.Value = GameStateName.TitleScreen;
                                     break;
                                 }
@@ -179,6 +192,13 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Close");
+                                    _state.Value = GameStateName.TitleScreen;
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
                                     _state.Value = GameStateName.TitleScreen;
                                     break;
                                 }
@@ -236,15 +256,21 @@ public class GameManager : MonoBehaviour
                                 }
                                 case "PictureStart":
                                 {
+                                    
                                     if (ES3.KeyExists("PictureSave(" + PictureManager.CurrentPicture.name + ")"))
                                     {
+                                        SoundPlayer.PlaySound("Click");
                                         PictureManager.HideImageButtons();
                                         _state.Value = GameStateName.ConfirmLoadPicture;
                                     }
                                     else
                                     {
+                                        SoundPlayer.PlaySound("Decide");
                                         PictureManager.ClearCurrentPicture();
                                         PictureManager.HideImageButtons();
+                                        PieceManager.SetPieceNum(PictureManager.CurrentPicture.sizeX *
+                                                                 PictureManager.CurrentPicture.sizeY);
+                                        PieceManager.SetPutPieceNum(0);
                                         MainTimer.SetCount(0);
                                         _state.Value = GameStateName.MoveToMainScreen;
                                     }
@@ -252,12 +278,14 @@ public class GameManager : MonoBehaviour
                                 }
                                 case "Title":
                                 {
+                                    SoundPlayer.PlaySound("EnterRoom");
                                     PictureManager.HideImageButtons();
                                     _state.Value = GameStateName.ScrollToTitleScreenFromSelectScreen;
                                     break;
                                 }
                                 case "Records":
                                 {
+                                    SoundPlayer.PlaySound("PopUp");
                                     PictureManager.HideImageButtons();
                                     _state.Value = GameStateName.RecordsDialogAtSelectScreen;
                                     break;
@@ -266,7 +294,8 @@ public class GameManager : MonoBehaviour
                                 {
                                     if (PictureManager.IsDoorOpen.Value)
                                     {
-                                        
+                                        PictureManager.HideImageButtons();
+                                        _state.Value = GameStateName.LeaveFromSelectScreen;
                                     }
                                     break;
                                 }
@@ -288,7 +317,8 @@ public class GameManager : MonoBehaviour
                     {
                         _state.Value = GameStateName.SelectScreen;
                     });
-                    MainScroll.Slide(-PictureManager.PicturePositions[PictureManager.SelectedPictureIndex.Value], 1.0f);
+                    SoundPlayer.PlaySound("MovePicture");
+                    MainScroll.Slide(-PictureManager.PicturePositions[PictureManager.SelectedPictureIndex.Value], 1.5f);
                     break;
                 }
                 case GameStateName.RecordsDialogAtSelectScreen:
@@ -301,6 +331,13 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Close");
+                                    _state.Value = GameStateName.SelectScreen;
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
                                     _state.Value = GameStateName.SelectScreen;
                                     break;
                                 }
@@ -336,28 +373,36 @@ public class GameManager : MonoBehaviour
                         var saveKey = "PictureSave(" + PictureManager.CurrentPicture.name + ")";
                         if (obj is string buttonName)
                         {
+                            var pieceNum = PictureManager.CurrentPicture.sizeX * PictureManager.CurrentPicture.sizeY;
                             switch (buttonName)
                             {
                                 case "Reset":
                                 {
+                                    SoundPlayer.PlaySound("Decide");
                                     ES3.DeleteKey(saveKey);
                                     PictureManager.ClearCurrentPicture();
                                     PictureManager.HideImageButtons();
+                                    PieceManager.SetPieceNum(pieceNum);
+                                    PieceManager.SetPutPieceNum(0);
                                     MainTimer.SetCount(0);
                                     _state.Value = GameStateName.MoveToMainScreen;
                                     break;
                                 }
                                 case "Load":
                                 {
+                                    SoundPlayer.PlaySound("Decide");
                                     var saveData = ES3.Load<PicturePieceSaveInfo>(saveKey);
                                     PictureManager.DrawCurrentPictureBySaveData(saveData);
                                     PictureManager.HideImageButtons();
+                                    PieceManager.SetPieceNum(pieceNum);
+                                    PieceManager.SetPutPieceNum(saveData.PutPieceNum);
                                     MainTimer.SetCount(saveData.time);
                                     _state.Value = GameStateName.MoveToMainScreen;
                                     break;
                                 }
                                 case "Cancel":
                                 {
+                                    SoundPlayer.PlaySound("Cancel");
                                     _state.Value = GameStateName.SelectScreen;
                                     break;
                                 }
@@ -426,6 +471,7 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Return":
                                 {
+                                    SoundPlayer.PlaySound("Click");
                                     PieceManager.Save(PictureManager.CurrentPicture.name);
                                     PieceManager.ClearPieces();
                                     var saveKey = "PictureSave(" + PictureManager.CurrentPicture.name + ")";
@@ -436,11 +482,13 @@ public class GameManager : MonoBehaviour
                                 }
                                 case "Records":
                                 {
+                                    SoundPlayer.PlaySound("PopUp");
                                     _state.Value = GameStateName.RecordsDialogAtMainScreen;
                                     break;
                                 }
                                 case "Settings":
                                 {
+                                    SoundPlayer.PlaySound("PopUp");
                                     _state.Value = GameStateName.SettingsDialogAtMainScreen;
                                     break;
                                 }
@@ -485,6 +533,13 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Close");
+                                    _state.Value = GameStateName.MainScreen;
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
                                     _state.Value = GameStateName.MainScreen;
                                     break;
                                 }
@@ -510,6 +565,13 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Close");
+                                    _state.Value = GameStateName.MainScreen;
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
                                     _state.Value = GameStateName.MainScreen;
                                     break;
                                 }
@@ -542,8 +604,18 @@ public class GameManager : MonoBehaviour
                 {
                     _actions.Add(ActionName.OnFinishWait, _ =>
                     {
+                        _state.Value = GameStateName.PuzzleFinishEffect;
+                    });
+                    Wait(1.0f);
+                    break;
+                }
+                case GameStateName.PuzzleFinishEffect:
+                {
+                    _actions.Add(ActionName.OnFinishWait, _ =>
+                    {
                         _state.Value = GameStateName.WaitForFadeInBackScreenForFinish;
                     });
+                    SoundPlayer.PlaySound("PuzzleClear");
                     Wait(1.0f);
                     break;
                 }
@@ -597,12 +669,24 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Tweet":
                                 {
-                                    TwitterModel.Tweet("クリアしたよ！");
+                                    var minute = (MainTimer.Count.Value / 3000 % 100).ToString("D2");
+                                    var second = (MainTimer.Count.Value / 50 % 60).ToString("D2");
+                                    var time = minute + "'" + second;
+                                    TwitterModel.Tweet("ピクセルアート美術館にて『" + PictureManager.CurrentPicture.title + "』を「" +
+                                                       time +
+                                                       "」で復元したよ！\n\n#unity1week #unityroom #ピクセルアート美術館\nhttps://unityroom.com/games/pixelpiecemuseum");
                                     _state.Value = GameStateName.WaitForSendableRecordsDialog;
                                     break;
                                 }
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Click");
+                                    _state.Value = GameStateName.WaitForSendableRecordsDialog;
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
                                     _state.Value = GameStateName.WaitForSendableRecordsDialog;
                                     break;
                                 }
@@ -613,6 +697,7 @@ public class GameManager : MonoBehaviour
                     {
                         TweetDialog.Hide();
                     });
+                    SoundPlayer.PlaySound("PopUp");
                     TweetDialog.Show();
                     break;
                 }
@@ -642,6 +727,21 @@ public class GameManager : MonoBehaviour
                                 }
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Click");
+                                    if (PictureManager.IsComplete && !PictureManager.IsDoorOpen.Value)
+                                    {
+                                        PictureManager.SetDoorOpen(true);
+                                        _state.Value = GameStateName.WaitForOpenTheDoorDialog;
+                                    }
+                                    else
+                                    {
+                                        _state.Value = GameStateName.FadeOutDialogForSelectScreen;
+                                    }
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
                                     if (PictureManager.IsComplete && !PictureManager.IsDoorOpen.Value)
                                     {
                                         PictureManager.SetDoorOpen(true);
@@ -680,6 +780,7 @@ public class GameManager : MonoBehaviour
                     {
                         SendableRecordsDialog.Hide();
                     });
+                    SoundPlayer.PlaySound("PopUp");
                     SendableRecordsDialog.Show();
                     RecordManager.ReceiveRecords(PictureManager.CurrentPicture.name);
                     break;
@@ -703,6 +804,13 @@ public class GameManager : MonoBehaviour
                             {
                                 case "Close":
                                 {
+                                    SoundPlayer.PlaySound("Click");
+                                    _state.Value = GameStateName.FadeOutDialogForSelectScreen;
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
                                     _state.Value = GameStateName.FadeOutDialogForSelectScreen;
                                     break;
                                 }
@@ -713,6 +821,7 @@ public class GameManager : MonoBehaviour
                     {
                         DoorOpenDialog.Hide();
                     });
+                    SoundPlayer.PlaySound("DoorOpen");
                     DoorOpenDialog.Show();
                     break;
                 }
@@ -755,6 +864,157 @@ public class GameManager : MonoBehaviour
                     });
                     PictureManager.ReturnEscape();
                     Wait(2.0f);
+                    break;
+                }
+                case GameStateName.LeaveFromSelectScreen:
+                {
+                    _actions.Add(ActionName.OnFinishWait, _ =>
+                    {
+                        _state.Value = GameStateName.EnterToCompleteScreen;
+                    });
+                    SoundPlayer.PlaySound("EnterRoom");
+                    ColorEffect.ChangeColor(Color.white);
+                    ColorEffect.FadeIn(2.0f);
+                    Wait(3.0f);
+                    break;
+                }
+                case GameStateName.EnterToCompleteScreen:
+                {
+                    _actions.Add(ActionName.OnFinishWait, _ =>
+                    {
+                        _state.Value = GameStateName.CompleteScreen;
+                    });
+                    MainScreen.HideMainScroll();
+                    MainScreen.ShowCompleteScreen();
+                    ColorEffect.FadeOut(1.5f);
+                    Wait(2.0f);
+                    break;
+                }
+                case GameStateName.CompleteScreen:
+                {
+                    _actions.Add(ActionName.OnPointerDownImageButton, obj =>
+                    {
+                        if (obj is string buttonName)
+                        {
+                            switch (buttonName)
+                            {
+                                case "Tweet":
+                                {
+                                    var time = PictureManager.CompleteTime;
+                                    var hour = (time / 180000 % 100).ToString("D2");
+                                    var minute = (time / 3000 % 60).ToString("D2");
+                                    var second = (time / 50 % 60).ToString("D2");
+                                    var totalTime = hour + ":" + minute + "'" + second;
+                                    TwitterModel.Tweet("ピクセルアート美術館にて、すべてのアートを「" +
+                                                       totalTime +
+                                                       "」で復元したよ！！\n\n#unity1week #unityroom #ピクセルアート美術館\nhttps://unityroom.com/games/pixelpiecemuseum");
+                                    break;
+                                }
+                                case "Records":
+                                {
+                                    _state.Value = GameStateName.CompleteRecordsDialog;
+                                    break;
+                                }
+                                case "Leave":
+                                {
+                                    _state.Value = GameStateName.LeaveFromCompleteScreen;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    _actionsBeforeChangeState.Add(() =>
+                    {
+                        BottomNavigation.HideUIsForCompleteScreen();
+                    });
+                    BottomNavigation.SetCompleteTime(PictureManager.CompleteTime);
+                    BottomNavigation.ShowUIsForCompleteScreen();
+                    break;
+                }
+                case GameStateName.LeaveFromCompleteScreen:
+                {
+                    _actions.Add(ActionName.OnFinishWait, _ =>
+                    {
+                        _state.Value = GameStateName.EnterToSelectScreen;
+                    });
+                    SoundPlayer.PlaySound("EnterRoom");
+                    ColorEffect.ChangeColor(Color.black);
+                    ColorEffect.FadeIn(2.0f);
+                    Wait(3.0f);
+                    break;
+                }
+                case GameStateName.EnterToSelectScreen:
+                {
+                    _actions.Add(ActionName.OnFinishWait,_=>
+                    {
+                        _state.Value = GameStateName.SelectScreen;
+                    });
+                    MainScreen.HideCompleteScreen();
+                    MainScreen.ShowMainScroll();
+                    ColorEffect.FadeOut(1.5f);
+                    Wait(2.0f);
+                    break;
+                }
+                case GameStateName.CompleteRecordsDialog:
+                {
+                    _actions.Add(ActionName.OnPointerDownImageButton, obj =>
+                    {
+                        if (obj is string buttonName)
+                        {
+                            switch (buttonName)
+                            {
+                                case "SendRecord":
+                                {
+                                    CompleteRecordsDialog.ClearRecords();
+                                    RecordManager.SendRecord(PlayerModel.Id.Value, PlayerModel.Name.Value,
+                                        "complete", PictureManager.CompleteTime);
+                                    break;
+                                }
+                                case "Close":
+                                {
+                                    SoundPlayer.PlaySound("Close");
+                                    _state.Value = GameStateName.CompleteScreen;
+                                    break;
+                                }
+                                case "Cancel":
+                                {
+                                    SoundPlayer.PlaySound("Cancel");
+                                    _state.Value = GameStateName.CompleteScreen;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+                    _actions.Add(ActionName.OnSendRecordSucceeded, _ =>
+                    {
+                        RecordManager.ReceiveRecords("complete");
+                    });
+                    _actions.Add(ActionName.OnSendRecordFailed, _ =>
+                    {
+                        Debug.Log("データ送信失敗");
+                    });
+                    _actions.Add(ActionName.OnReceiveRecordsSucceeded, obj =>
+                    {
+                        if (obj is Record[] records)
+                        {
+                            CompleteRecordsDialog.UpdateRecords(records);
+                        }
+                    });
+                    _actions.Add(ActionName.OnReceiveRecordsFailed, _ =>
+                    {
+                        Debug.Log("データ受信失敗");
+                    });
+                    
+                    _actionsBeforeChangeState.Add(() =>
+                    {
+                        BackScreen.FadeOut(0.0f);
+                        CompleteRecordsDialog.Hide();
+                    });
+                    BackScreen.FadeIn(0.0f);
+                    CompleteRecordsDialog.SetCompleteTime(PictureManager.CompleteTime);
+                    CompleteRecordsDialog.ClearRecords();
+                    CompleteRecordsDialog.Show();
+                    RecordManager.ReceiveRecords("complete");
                     break;
                 }
             }

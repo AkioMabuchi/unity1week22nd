@@ -68,14 +68,23 @@ public class PieceManager : MonoBehaviour
     {
         _onClearPieces.OnNext(Unit.Default);
     }
+
+    public static void SetPieceNum(int num)
+    {
+        _pieceNum.Value = num;
+    }
+
+    public static void SetPutPieceNum(int num)
+    {
+        _putPieceNum.Value = num;
+    }
     
     [SerializeField] private GameObject prefabPiece;
     [SerializeField] private Transform transformPanelPieces;
     [SerializeField] private Transform transformIndependentPieces;
     [SerializeField] private Transform transformSelectedPieces;
     [SerializeField] private ScrollRect scroll;
-    [SerializeField] private Image imageScrollBar;
-
+    
     private readonly List<Piece> _pieces = new();
     private int _selectedPieceIndex = -1;
     
@@ -85,7 +94,7 @@ public class PieceManager : MonoBehaviour
     private int _maxPieceSizeY;
     private int _pieceSizeX;
     private int _pieceSizeY;
-    private int _putRange = 3;
+    private int _putRange;
     private readonly List<int> _pieceMap = new();
     private readonly List<Color> _colorMap = new();
     private readonly List<PieceStatus> _pieceStatus = new();
@@ -108,6 +117,7 @@ public class PieceManager : MonoBehaviour
             _maxPieceSizeY = _pieceSizeY >= 24 ? _pieceSizeY + 10 :
                 _pieceSizeY >= 18 ? _pieceSizeY + 8 :
                 _pieceSizeY >= 12 ? _pieceSizeY + 6 : _pieceSizeY + 4;
+            _putRange = _pieceSizeX >= 20 ? 5 : 4;
             var pixelAmount = picture.texture.width * picture.texture.height;
 
             _pieceMap.Clear();
@@ -270,17 +280,12 @@ public class PieceManager : MonoBehaviour
                 _pieces[i].SetTexture(pieceTextures[i]);
                 _pieces[i].SetPosition(new Vector2Int(positionXs[i], -15));
             }
-
-            _putPieceNum.Value = 0;
-            _pieceNum.Value = amount;
         }).AddTo(gameObject);
 
         _onLoadPieces.Subscribe(tuple =>
         {
             var (picture, saveData) = tuple;
-            
-            _putPieceNum.Value = 0;
-            _pieceNum.Value = picture.sizeX * picture.sizeY; 
+
             _pieceMap.Clear();
             _colorMap.Clear();
 
@@ -339,7 +344,7 @@ public class PieceManager : MonoBehaviour
             var sizeDelta = scroll.content.sizeDelta;
             sizeDelta.x = _maxSizeOfPieceDeck;
             scroll.content.sizeDelta = sizeDelta;
-            
+
             for (var i = 0; i < saveData.pieces.Length; i++)
             {
                 var piece = saveData.pieces[i];
@@ -373,7 +378,6 @@ public class PieceManager : MonoBehaviour
                     }
                     case 2: // パネルにある
                     {
-                        _putPieceNum.Value++;
                         _pieces[i].SetControllable(false);
                         _pieces[i].transform.SetParent(transformPanelPieces);
                         break;
@@ -384,8 +388,6 @@ public class PieceManager : MonoBehaviour
                 _pieces[i].SetTexture(pieceTextures[i]);
                 _pieces[i].transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             }
-
-            _maxSizeOfPieceDeck = (_maxPieceSizeX + 2) * saveData.pieces.Length + 20;
         }).AddTo(gameObject);
         
         _onPointerDownPiece.Where(_ => _selectedPieceIndex < 0).Subscribe(index =>
