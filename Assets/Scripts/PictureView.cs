@@ -12,6 +12,8 @@ public class PictureView : MonoBehaviour
 {
     [SerializeField] private Image imageFrame;
     [SerializeField] private RawImage rawImagePicture;
+    [SerializeField] private GameObject buttonPrev;
+    [SerializeField] private GameObject buttonNext;
     [SerializeField] private Image imageButtonPrev;
     [SerializeField] private Image imageButtonNext;
     [SerializeField] private Image imagePieceNumber;
@@ -34,8 +36,8 @@ public class PictureView : MonoBehaviour
         rawImagePicture.texture = pictureInfo.texture;
         var imageButtonPrevPositionX = pictureInfo.texture.width / -2 - 10;
         var imageButtonNextPositionX = pictureInfo.texture.width / 2 + 10;
-        imageButtonPrev.transform.localPosition = new Vector3(imageButtonPrevPositionX, 0.0f, 0.0f);
-        imageButtonNext.transform.localPosition = new Vector3(imageButtonNextPositionX, 0.0f, 0.0f);
+        buttonPrev.transform.localPosition = new Vector3(imageButtonPrevPositionX, 0.0f, 0.0f);
+        buttonNext.transform.localPosition = new Vector3(imageButtonNextPositionX, 0.0f, 0.0f);
 
         textMeshProPieceNumber.text = (pictureInfo.sizeX * pictureInfo.sizeY).ToString();
         textMeshProTitle.text = pictureInfo.title;
@@ -56,19 +58,21 @@ public class PictureView : MonoBehaviour
     {
         if (_isActiveImageButtonPrev)
         {
-            imageButtonPrev.gameObject.SetActive(true);
+            imageButtonPrev.DOFade(1, 0.2f);
+            buttonPrev.gameObject.SetActive(true);
         }
 
         if (_isActiveImageButtonNext)
         {
-            imageButtonNext.gameObject.SetActive(true);
+            imageButtonNext.DOFade(1, 0.2f);
+            buttonNext.gameObject.SetActive(true);
         }
     }
 
     public void HideImageButtons()
     {
-        imageButtonPrev.gameObject.SetActive(false);
-        imageButtonNext.gameObject.SetActive(false);
+        imageButtonPrev.DOFade(0, 0.2f).OnComplete(() => { buttonPrev.gameObject.SetActive(false); });
+        imageButtonNext.DOFade(0, 0.2f).OnComplete(() => { buttonNext.gameObject.SetActive(false); });
     }
 
     public void EscapeToLeft()
@@ -89,13 +93,17 @@ public class PictureView : MonoBehaviour
     public void ShowDetails()
     {
         imagePieceNumber.gameObject.SetActive(true);
+        imagePieceNumber.rectTransform.DOAnchorPosY(-12, 0.3f);
         imageTitle.gameObject.SetActive(true);
         textMeshProAuthor.gameObject.SetActive(true);
     }
 
     public void HideDetails()
     {
-        imagePieceNumber.gameObject.SetActive(false);
+        imagePieceNumber.rectTransform.DOAnchorPosY(14, 0.3f).OnComplete(() =>
+        {
+            imagePieceNumber.gameObject.SetActive(false);
+        });
         imageTitle.gameObject.SetActive(false);
         textMeshProAuthor.gameObject.SetActive(false);
     }

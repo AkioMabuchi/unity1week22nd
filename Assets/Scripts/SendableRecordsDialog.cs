@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -39,6 +40,9 @@ public class SendableRecordsDialog : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldPlayerName;
     [SerializeField] private ScrollRect scrollRecords;
     [SerializeField] private TextMeshProUGUI textMeshProTime;
+    
+    [SerializeField] private GameObject dialogContents;
+
 
     private readonly List<RecordView> _recordViews = new();
 
@@ -59,11 +63,23 @@ public class SendableRecordsDialog : MonoBehaviour
         _onShow.Subscribe(_ =>
         {
             contents.gameObject.SetActive(true);
+            contents.alpha = 0;
+            dialogContents.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+
+            contents.DOFade(1, 0.2f);
+            dialogContents.transform.DOScale(new Vector3(1, 1, 1), 0.3f).SetEase(Ease.InOutCirc);
         }).AddTo(gameObject);
 
         _onHide.Subscribe(_ =>
         {
-            contents.gameObject.SetActive(false);
+            contents.alpha = 1;
+            dialogContents.transform.localScale = new Vector3(1, 1, 1);
+
+            contents.DOFade(0, 0.2f);
+            dialogContents.transform.DOScale(new Vector3(0, 0), 0.5f).SetEase(Ease.OutCirc).OnComplete(() =>
+            {
+                contents.gameObject.SetActive(false);
+            });
         }).AddTo(gameObject);
 
         _onUpdateRecords.Subscribe(records =>

@@ -113,22 +113,30 @@ public class BottomNavigation : MonoBehaviour
         
         _onShowUIsForTitleScreen.Subscribe(_ =>
         {
+            titleScreen.transform.DOLocalMoveY(0, 0.3f);
             titleScreen.SetActive(true);
         }).AddTo(gameObject);
 
         _onHideUIsForTitleScreen.Subscribe(_ =>
         {
-            titleScreen.SetActive(false);
+            titleScreen.transform.DOLocalMoveY(-20, 0.3f).OnComplete(() =>
+            {
+                titleScreen.SetActive(false);
+            });
         }).AddTo(gameObject);
 
         _onShowUIsForSelectScreen.Subscribe(_ =>
         {
+            selectScreen.transform.DOLocalMoveY(0, 0.3f);
             selectScreen.SetActive(true);
         }).AddTo(gameObject);
 
         _onHideUIsForSelectScreen.Subscribe(_ =>
         {
-            selectScreen.SetActive(false);
+            selectScreen.transform.DOLocalMoveY(-20, 0.3f).OnComplete(() =>
+            {
+                selectScreen.SetActive(false);
+            });
         }).AddTo(gameObject);
 
         _onShowUIsForPieceScroll.Subscribe(_ =>
@@ -143,12 +151,16 @@ public class BottomNavigation : MonoBehaviour
 
         _onShowUIsForCompleteScreen.Subscribe(_ =>
         {
+            completeScreen.transform.DOLocalMoveY(0, 0.3f);
             completeScreen.SetActive(true);
         }).AddTo(gameObject);
 
         _onHideUIsForCompleteScreen.Subscribe(_ =>
         {
-            completeScreen.SetActive(false);
+            completeScreen.transform.DOLocalMoveY(-20, 0.3f).OnComplete(() =>
+            {
+                completeScreen.SetActive(false);
+            });
         }).AddTo(gameObject);
 
         _clearTime.Subscribe(clearTime =>

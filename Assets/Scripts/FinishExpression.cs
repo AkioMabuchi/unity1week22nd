@@ -33,6 +33,8 @@ public class FinishExpression : MonoBehaviour
     [SerializeField] private RawImage rawImagePicture;
     [SerializeField] private TextMeshProUGUI textMeshProPieceNumber;
     [SerializeField] private TextMeshProUGUI textMeshProTitle;
+    
+    [SerializeField] private Image cover;
 
     private void Awake()
     {
@@ -48,11 +50,17 @@ public class FinishExpression : MonoBehaviour
         }).AddTo(gameObject);
         _onShowDown.Subscribe(duration =>
         {
+            cover.gameObject.SetActive(true);
+            cover.DOFade(0.75f, duration);
             transformScrollable.DOLocalMoveY(0.0f, duration, true).SetEase(Ease.OutBack);
         }).AddTo(gameObject);
 
         _onHideUp.Subscribe(duration =>
         {
+            cover.DOFade(0, duration).SetDelay(1.0f).OnComplete(() =>
+            {
+                cover.gameObject.SetActive(false);
+            });
             transformScrollable.DOLocalMoveY(180.0f, duration, true).SetEase(Ease.InBack);
         }).AddTo(gameObject);
     }

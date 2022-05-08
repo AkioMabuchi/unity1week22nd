@@ -220,7 +220,7 @@ public class GameManager : MonoBehaviour
                     {
                         _state.Value = GameStateName.SelectScreen;
                     });
-                    MainScroll.Slide(-PictureManager.PicturePositions[PictureManager.SelectedPictureIndex.Value], 3.0f);
+                    MainScroll.Slide(-PictureManager.PicturePositions[PictureManager.SelectedPictureIndex.Value], 2.0f);
                     break;
                 }
                 case GameStateName.ScrollToTitleScreenFromSelectScreen:
@@ -229,7 +229,7 @@ public class GameManager : MonoBehaviour
                     {
                         _state.Value = GameStateName.TitleScreen;
                     });
-                    MainScroll.Slide(0.0f, 3.0f);
+                    MainScroll.Slide(0.0f, 2.0f);
                     break;
                 }
                 case GameStateName.SelectScreen:
@@ -318,7 +318,7 @@ public class GameManager : MonoBehaviour
                         _state.Value = GameStateName.SelectScreen;
                     });
                     SoundPlayer.PlaySound("MovePicture");
-                    MainScroll.Slide(-PictureManager.PicturePositions[PictureManager.SelectedPictureIndex.Value], 1.5f);
+                    MainScroll.Slide(-PictureManager.PicturePositions[PictureManager.SelectedPictureIndex.Value], 1.0f);
                     break;
                 }
                 case GameStateName.RecordsDialogAtSelectScreen:
@@ -655,8 +655,8 @@ public class GameManager : MonoBehaviour
                     {
                         _state.Value = GameStateName.TweetDialogAtFinishPuzzle;
                     });
-                    FinishExpression.HideUp(2.0f);
-                    Wait(4.0f);
+                    FinishExpression.HideUp(1.5f);
+                    Wait(3.0f);
                     break;
                 }
                 case GameStateName.TweetDialogAtFinishPuzzle:
