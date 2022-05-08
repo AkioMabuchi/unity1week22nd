@@ -664,9 +664,9 @@ public class GameManager : MonoBehaviour
                                     var minute = (MainTimer.Count.Value / 3000 % 100).ToString("D2");
                                     var second = (MainTimer.Count.Value / 50 % 60).ToString("D2");
                                     var time = minute + "'" + second;
-                                    TwitterModel.Tweet("ピクセルアート美術館にて『" + PictureManager.CurrentPicture.title + "』を「" +
+                                    TwitterModel.Tweet("ピクセルピース美術館にて『" + PictureManager.CurrentPicture.title + "』を「" +
                                                        time +
-                                                       "」で復元したよ！\n\n#unity1week #unityroom #ピクセルアート美術館\nhttps://unityroom.com/games/pixelpiecemuseum");
+                                                       "」で復元したよ！\n\n#unity1week #unityroom #ピクセルアート美術館 #ピクセルピース美術館\nhttps://unityroom.com/games/pixelpiecemuseum");
                                     _state.Value = GameStateName.WaitForSendableRecordsDialog;
                                     break;
                                 }
@@ -899,9 +899,9 @@ public class GameManager : MonoBehaviour
                                     var minute = (time / 3000 % 60).ToString("D2");
                                     var second = (time / 50 % 60).ToString("D2");
                                     var totalTime = hour + ":" + minute + "'" + second;
-                                    TwitterModel.Tweet("ピクセルアート美術館にて、すべてのアートを「" +
+                                    TwitterModel.Tweet("ピクセルピース美術館にて、すべてのアートを「" +
                                                        totalTime +
-                                                       "」で復元したよ！！\n\n#unity1week #unityroom #ピクセルアート美術館\nhttps://unityroom.com/games/pixelpiecemuseum");
+                                                       "」で復元したよ！！\n\n#unity1week #unityroom #ピクセルアート美術館 #ピクセルピース美術館\nhttps://unityroom.com/games/pixelpiecemuseum");
                                     break;
                                 }
                                 case "Records":
