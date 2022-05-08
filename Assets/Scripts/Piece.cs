@@ -46,7 +46,7 @@ public class Piece : MonoBehaviour
         var t = transform;
         var localPosition = t.localPosition;
         localPosition.x = position.x;
-        localPosition.y = position.y;
+        localPosition.y = position.y + 1;
         t.localPosition = localPosition;
     }
 }

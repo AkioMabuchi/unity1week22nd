@@ -28,14 +28,14 @@ public class PictureView : MonoBehaviour
     {
         _basePositionX = (int) transform.localPosition.x;
         var imageFrameSizeX = pictureInfo.texture.width + 6;
-        var imageFrameSizeY = pictureInfo.texture.height + 6;
+        var imageFrameSizeY = pictureInfo.texture.height + 8;
         imageFrame.rectTransform.sizeDelta = new Vector2(imageFrameSizeX, imageFrameSizeY);
         rawImagePicture.rectTransform.sizeDelta = new Vector2(pictureInfo.texture.width, pictureInfo.texture.height);
         rawImagePicture.texture = pictureInfo.texture;
         var imageButtonPrevPositionX = pictureInfo.texture.width / -2 - 10;
         var imageButtonNextPositionX = pictureInfo.texture.width / 2 + 10;
-        imageButtonPrev.transform.localPosition = new Vector3(imageButtonPrevPositionX, 17.0f, 0.0f);
-        imageButtonNext.transform.localPosition = new Vector3(imageButtonNextPositionX, 17.0f, 0.0f);
+        imageButtonPrev.transform.localPosition = new Vector3(imageButtonPrevPositionX, 0.0f, 0.0f);
+        imageButtonNext.transform.localPosition = new Vector3(imageButtonNextPositionX, 0.0f, 0.0f);
 
         textMeshProPieceNumber.text = (pictureInfo.sizeX * pictureInfo.sizeY).ToString();
         textMeshProTitle.text = pictureInfo.title;
@@ -112,6 +112,7 @@ public class PictureView : MonoBehaviour
 
     public void ClearPicture()
     {
+        
         var texture2d = new Texture2D(rawImagePicture.texture.width, rawImagePicture.texture.height,
             TextureFormat.RGB24, false)
         {
@@ -126,6 +127,9 @@ public class PictureView : MonoBehaviour
         texture2d.SetPixels(pixels);
         texture2d.Apply();
         rawImagePicture.texture = texture2d;
+        
+
+        //rawImagePicture.color = new Color(0, 0, 0, 0);
     }
 
     public void DrawPictureBySaveData(PictureInfo picture, PicturePieceSaveInfo saveData)

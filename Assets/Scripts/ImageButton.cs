@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(ObservableEventTrigger))]
 public class ImageButton : MonoBehaviour
@@ -17,9 +18,12 @@ public class ImageButton : MonoBehaviour
 
     private void Awake()
     {
-        eventTrigger.OnPointerDownAsObservable().Subscribe(_ =>
+        eventTrigger.OnPointerClickAsObservable().Subscribe(_ =>
         {
-            GameManager.SendAction(ActionName.OnPointerDownImageButton, buttonName);
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                GameManager.SendAction(ActionName.OnPointerDownImageButton, buttonName);
+            }
         }).AddTo(gameObject);
     }
 }

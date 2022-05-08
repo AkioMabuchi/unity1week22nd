@@ -40,7 +40,7 @@ public class FinishExpression : MonoBehaviour
         {
             var sizeX = picture.texture.width;
             var sizeY = picture.texture.height;
-            imageFrame.rectTransform.sizeDelta = new Vector2(sizeX + 6, sizeY + 6);
+            imageFrame.rectTransform.sizeDelta = new Vector2(sizeX + 6, sizeY + 8);
             rawImagePicture.rectTransform.sizeDelta = new Vector2(sizeX, sizeY);
             rawImagePicture.texture = picture.texture;
             textMeshProPieceNumber.text = (picture.sizeX * picture.sizeY).ToString();
