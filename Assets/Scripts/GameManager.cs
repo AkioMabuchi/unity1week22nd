@@ -59,15 +59,7 @@ public class GameManager : MonoBehaviour
                 {
                     _actions.Add(ActionName.OnFinishWait, _ =>
                     {
-                        if (ES3.KeyExists("Story"))
-                        {
-                            _state.Value = GameStateName.TitleScreen;
-                        }
-                        else
-                        {
-                            ES3.Save("Story", Unit.Default);
-                            _state.Value = GameStateName.WaitForStoryDialog;
-                        }
+                        _state.Value = GameStateName.TitleScreen;
                     });
                     Wait(0.1f);
                     break;
@@ -124,8 +116,8 @@ public class GameManager : MonoBehaviour
                                 }
                                 case "Story":
                                 {
-                                    SoundPlayer.PlaySound("PopUp");
-                                    _state.Value = GameStateName.StoryDialog;
+                                    // SoundPlayer.PlaySound("PopUp");
+                                    // _state.Value = GameStateName.StoryDialog;
                                     break;
                                 }
                                 case "Credits":
@@ -758,6 +750,7 @@ public class GameManager : MonoBehaviour
                     });
                     _actions.Add(ActionName.OnSendRecordSucceeded, _ =>
                     {
+                        SendableRecordsDialog.ClearRecords();
                         RecordManager.ReceiveRecords(PictureManager.CurrentPicture.name);
                     });
                     _actions.Add(ActionName.OnSendRecordFailed, _ =>
@@ -782,6 +775,7 @@ public class GameManager : MonoBehaviour
                     });
                     SoundPlayer.PlaySound("PopUp");
                     SendableRecordsDialog.Show();
+                    SendableRecordsDialog.ClearRecords();
                     RecordManager.ReceiveRecords(PictureManager.CurrentPicture.name);
                     break;
                 }
@@ -912,6 +906,7 @@ public class GameManager : MonoBehaviour
                                 }
                                 case "Records":
                                 {
+                                    SoundPlayer.PlaySound("PopUp");
                                     _state.Value = GameStateName.CompleteRecordsDialog;
                                     break;
                                 }
@@ -987,6 +982,7 @@ public class GameManager : MonoBehaviour
                     });
                     _actions.Add(ActionName.OnSendRecordSucceeded, _ =>
                     {
+                        CompleteRecordsDialog.ClearRecords();
                         RecordManager.ReceiveRecords("complete");
                     });
                     _actions.Add(ActionName.OnSendRecordFailed, _ =>

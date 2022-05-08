@@ -6956,7 +6956,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -32.69999, y: 46}
+  m_AnchoredPosition: {x: -33, y: 46}
   m_SizeDelta: {x: 67.2, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &585976918
@@ -7998,7 +7998,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -8058,7 +8058,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 17, y: 0}
+  m_AnchoredPosition: {x: 19, y: 0}
   m_SizeDelta: {x: 40, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &651168697
@@ -9919,7 +9919,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 31.800007, y: 46}
+  m_AnchoredPosition: {x: 40, y: 46}
   m_SizeDelta: {x: 40, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &853011561
@@ -9976,7 +9976,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -11599,8 +11599,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -44.100002, y: 46}
-  m_SizeDelta: {x: 88.2, y: 12}
+  m_AnchoredPosition: {x: -44, y: 46}
+  m_SizeDelta: {x: 88, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1063191884
 MonoBehaviour:
@@ -13269,8 +13269,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u3068\u3058\u308B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4e78d863eb78640c4882bb74eb2b9982, type: 2}
-  m_sharedMaterial: {fileID: -3027789292507450291, guid: 4e78d863eb78640c4882bb74eb2b9982, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -13974,7 +13974,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1293128051
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14933,7 +14933,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 298991891}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.35333338
+  m_Size: 0.35333332
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -15697,7 +15697,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 28.900005, y: 46}
+  m_AnchoredPosition: {x: 45, y: 46}
   m_SizeDelta: {x: 70, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1451612382
@@ -15754,7 +15754,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -16398,7 +16398,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 83, y: 1}
+  m_AnchoredPosition: {x: 86, y: 1}
   m_SizeDelta: {x: 30, y: 12}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1498113148
@@ -16455,7 +16455,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -19651,8 +19651,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 36bdb240a5f5b46a4938cd9d073e2cc7, type: 2}
   prefabPictureView: {fileID: 1836744009625988093, guid: e8479c8d052b740b3b7bf6b8d122c39d, type: 3}
-  spriteDoor: {fileID: 0}
-  spriteDoorOpen: {fileID: 0}
+  spriteDoor: {fileID: 21300000, guid: b0b6121aa857ec14e9de273f2f065b47, type: 3}
+  spriteDoorOpen: {fileID: 21300000, guid: 652c0bc95a0c4cd4092e9f417a116958, type: 3}
   transformSelectScreen: {fileID: 1390208839}
   imageDoor: {fileID: 1875606237}
 --- !u!1 &1901991282
@@ -21719,7 +21719,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2036288857}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.35333338
+  m_Size: 0.35333332
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

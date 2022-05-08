@@ -243,6 +243,8 @@ public class PictureManager : MonoBehaviour
             var pictureView = Instantiate(prefabPictureView, transformSelectScreen).GetComponent<PictureView>();
             _pictureViews.Add(pictureView);
 
+            picturePositionX += picture.texture.width / 2 + 20;
+            
             _pictureViews[i].transform.localPosition = new Vector3(picturePositionX, 0.0f, 0.0f);
             _pictureViews[i].Initialize(picture);
 
@@ -277,9 +279,10 @@ public class PictureManager : MonoBehaviour
             }
 
             _picturePositions.Add(picturePositionX);
-            picturePositionX += picture.texture.width + 40;
+            picturePositionX += picture.texture.width / 2 + 20;
         }
 
+        picturePositionX += 80;
         imageDoor.transform.localPosition = new Vector3(picturePositionX - 50.5f, -24.0f, 0.0f);
     }
 }

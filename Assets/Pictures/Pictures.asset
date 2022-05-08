@@ -13,21 +13,87 @@ MonoBehaviour:
   m_Name: Pictures
   m_EditorClassIdentifier: 
   pictures:
-  - texture: {fileID: 2800000, guid: edd8035285a1d4650bf09c772b95e476, type: 3}
-    sizeX: 2
-    sizeY: 2
-    name: test1
-    title: "\u30A2\u30AD\u30AA\u304F\u30931"
-    author: Akio
-  - texture: {fileID: 2800000, guid: edd8035285a1d4650bf09c772b95e476, type: 3}
+  - texture: {fileID: 2800000, guid: 501e4c720af884107b49247337131afc, type: 3}
+    sizeX: 3
+    sizeY: 3
+    name: letter
+    title: "\u3066\u304C\u307F\u3057\u3087\u3046\u3058\u3087"
+    author: "\u3086\u30FC\u3058"
+  - texture: {fileID: 2800000, guid: d22d238dd8acf4ea48bb17c802efb354, type: 3}
+    sizeX: 4
+    sizeY: 3
+    name: pancake
+    title: "\u30D1\u30F3\u30B1\u30FC\u30AD"
+    author: "\u3046\u3080\u3046\u3080"
+  - texture: {fileID: 2800000, guid: a86bac9335e2740c7b234cab9d027db0, type: 3}
+    sizeX: 4
+    sizeY: 4
+    name: fruits
+    title: "\u30D5\u30EB\u30FC\u30C6\u30A3\u30FC\u30C6\u30FC\u30D6\u30EB"
+    author: "\u30A2\u30AD\u30AA"
+  - texture: {fileID: 2800000, guid: 48e801b21baf44658a24fce67e867122, type: 3}
+    sizeX: 5
+    sizeY: 4
+    name: shallowsea
+    title: "\u3042\u3055\u305B\u306E\u3046\u307F"
+    author: bone
+  - texture: {fileID: 2800000, guid: 534e084e6e6a54635886642ef9531869, type: 3}
+    sizeX: 5
+    sizeY: 5
+    name: psyber
+    title: "\u305B\u3044\u3057\u3093\u304F\u3046\u304B\u3093"
+    author: "\u30A2\u30AD\u30AA"
+  - texture: {fileID: 2800000, guid: 3026fd17e42444c08b35bef3fce1ac30, type: 3}
     sizeX: 6
     sizeY: 6
-    name: test2
-    title: "\u30A2\u30AD\u30AA\u304F\u30932"
-    author: Akio
-  - texture: {fileID: 2800000, guid: edd8035285a1d4650bf09c772b95e476, type: 3}
-    sizeX: 2
-    sizeY: 3
-    name: test5
-    title: "\u30A2\u30AD\u30AA\u304F\u30933"
-    author: Akio
+    name: samechan
+    title: samechan
+    author: "\u3055\u3081\u307F\u305A"
+  - texture: {fileID: 2800000, guid: 0b7655354b26648258a7cb24f46ccbd3, type: 3}
+    sizeX: 8
+    sizeY: 6
+    name: dance
+    title: "\u3046\u305F\u3048\u3084\u304A\u3069\u308C\u3084"
+    author: "\u795E\u5CA1"
+  - texture: {fileID: 2800000, guid: 65356c3ce0beb413da8fe17759d85f4e, type: 3}
+    sizeX: 8
+    sizeY: 8
+    name: watermelon
+    title: "\u30B9\u30A4\u30AB"
+    author: "\u3046\u3080\u3046\u3080"
+  - texture: {fileID: 2800000, guid: 9af722183686c4bd0a053b2d423c2160, type: 3}
+    sizeX: 9
+    sizeY: 9
+    name: nowa
+    title: "\u3088\u308B\u306E\u307E\u3061\u306E\u30ED\u30DC\u30C3\u30C8"
+    author: "\u3046\u3059\u3044\u3057\u304A"
+  - texture: {fileID: 2800000, guid: db3d156b54a4d430a95a4db76ad716c2, type: 3}
+    sizeX: 12
+    sizeY: 9
+    name: ouroboros
+    title: Ouroboros
+    author: "\u3048\u3075\u3047\u5B50"
+  - texture: {fileID: 2800000, guid: 0c36a5a0d72d547c29bbcdce2f2a6ce2, type: 3}
+    sizeX: 12
+    sizeY: 10
+    name: evfloors
+    title: "\u3046\u3054\u304F\u3086\u304B\u306E\u304A\u3075\u305F\u308A"
+    author: "\u30A2\u30AD\u30AA"
+  - texture: {fileID: 2800000, guid: 408fe686317d14b3b957fc8fef7c9b88, type: 3}
+    sizeX: 16
+    sizeY: 9
+    name: ayaka
+    title: "\u3055\u304F\u3089\u307E\u3046\u304A\u304B\u3067"
+    author: "\u30A2\u30AD\u30AA"
+  - texture: {fileID: 2800000, guid: 5b9d6e3b2c655439f86edb80f7889b6e, type: 3}
+    sizeX: 18
+    sizeY: 10
+    name: brown
+    title: "\u3061\u3083\u3044\u308D\u306E\u3066\u3093\u3054\u304F"
+    author: "\u307E\u3093\u305F\u3042\u306B\u3069\u3002"
+  - texture: {fileID: 2800000, guid: cc435599e9fe244768b211a4c5b59270, type: 3}
+    sizeX: 11
+    sizeY: 11
+    name: namida
+    title: namida
+    author: "\u306D\u304E"
