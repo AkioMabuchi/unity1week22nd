@@ -167,19 +167,7 @@ public class PictureView : MonoBehaviour
 
     public void DrawPicture(PictureInfo picture)
     {
-        var texture2d = new Texture2D(rawImagePicture.texture.width, rawImagePicture.texture.height,
-            TextureFormat.RGB24, false)
-        {
-            filterMode = FilterMode.Point
-        };
-        for (var i = 0; i < texture2d.GetPixels().Length; i++)
-        {
-            var x = i % picture.texture.width;
-            var y = i / picture.texture.width;
-            texture2d.SetPixel(x, y, picture.texture.GetPixel(x, y));
-        }
-        texture2d.Apply();
-        rawImagePicture.texture = texture2d;
+        rawImagePicture.texture = picture.texture;
     }
 }
 

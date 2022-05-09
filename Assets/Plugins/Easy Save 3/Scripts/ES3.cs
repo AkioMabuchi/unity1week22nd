@@ -7,7 +7,15 @@ using ES3Internal;
 using UnityEngine.Networking;
 #endif
 
-public static class ES3
+/// <summary>
+/// The main class for Easy Save methods. All methods in this class are static.
+/// </summary> 
+#if UNITY_VISUAL_SCRIPTING
+[Unity.VisualScripting.IncludeInSettings(true)]
+#elif BOLT_VISUAL_SCRIPTING
+[Ludiq.IncludeInSettings(true)]
+#endif
+public class ES3
 {
 	public enum Location 		{ File, PlayerPrefs, InternalMS, Resources, Cache };
 	public enum Directory		{ PersistentDataPath, DataPath }
@@ -346,6 +354,42 @@ public static class ES3
     public static object Load(string key, ES3Settings settings)
     {
         return Load<object>(key, settings);
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    public static object Load(string key, object defaultValue)
+    {
+        return Load<object>(key, defaultValue, new ES3Settings());
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to load from.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    public static object Load(string key, string filePath, object defaultValue)
+    {
+        return Load<object>(key, defaultValue, new ES3Settings(filePath));
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="filePath">The relative or absolute path of the file we want to load from.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    /// <param name="settings">The settings we want to use to override the default settings.</param>
+    public static object Load(string key, string filePath, object defaultValue, ES3Settings settings)
+    {
+        return Load<object>(key, defaultValue, new ES3Settings(filePath, settings));
+    }
+
+    /// <summary>Loads the value from a file with the given key.</summary>
+    /// <param name="key">The key which identifies the value we want to load.</param>
+    /// <param name="defaultValue">The value we want to return if the file or key does not exist.</param>
+    /// <param name="settings">The settings we want to use to override the default settings.</param>
+    public static object Load(string key, object defaultValue, ES3Settings settings)
+    {
+        return Load<object>(key, defaultValue, settings);
     }
 
     /// <summary>Loads the value from a file with the given key.</summary>

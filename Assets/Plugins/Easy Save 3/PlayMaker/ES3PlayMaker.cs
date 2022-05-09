@@ -1641,6 +1641,35 @@ namespace ES3PlayMaker
 
     #endregion
 
+    #region Misc actions
+
+    [ActionCategory("Easy Save 3")]
+    [Tooltip("Gets the Streaming Assets path (see https://docs.unity3d.com/Manual/StreamingAssets.html), and optionally appends onto it. It is strongly recommended to use Easy Save's default of Persistent Data Path instead as this works on all platforms.")]
+    public class GetStreamingAssetsPath : FsmStateAction
+    {
+        [Tooltip("The variable we want to output the Streaming Assets path to.")]
+        public FsmString output;
+        [Tooltip("[Optional] A string to append to the path, for example a filename. A forward slash is automatically added for you.")]
+        public FsmString append;
+
+        public override void Reset()
+        {
+            output = null;
+            append = null;
+        }
+
+        public override void OnEnter()
+        {
+            if (!string.IsNullOrEmpty(append.Value))
+                output.Value = Application.streamingAssetsPath + "/" + append.Value;
+            else
+                output.Value = Application.streamingAssetsPath;
+            Finish();
+        }
+    }
+
+    #endregion
+
     public class PMDataWrapper
     {
         public Dictionary<string, object> objs = null;

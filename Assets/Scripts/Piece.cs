@@ -15,8 +15,7 @@ public class Piece : MonoBehaviour
     private bool _isControllable;
 
     public Vector2Int Position => new((int) transform.localPosition.x, (int) transform.localPosition.y);
-    public Texture2D Texture => (Texture2D) rawImage.texture;
-    
+
     private void Awake()
     {
         eventTrigger.OnPointerDownAsObservable().Where(_ => _isControllable).Subscribe(_ =>

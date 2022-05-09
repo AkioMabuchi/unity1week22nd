@@ -383,8 +383,8 @@ public class PieceManager : MonoBehaviour
                         break;
                     }
                 }
-                
-                _pieces[i].SetPosition(new Vector2Int(piece.positionX, piece.positionY));
+
+                _pieces[i].SetPosition(new Vector2Int(piece.positionX, piece.positionY - 1));
                 _pieces[i].SetTexture(pieceTextures[i]);
                 _pieces[i].transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
             }
@@ -403,14 +403,16 @@ public class PieceManager : MonoBehaviour
             var pieceSaveInfo = new PieceSaveInfo[_pieces.Count];
             for (var i = 0; i < _pieces.Count; i++)
             {
-                pieceSaveInfo[i] = new PieceSaveInfo();
-                pieceSaveInfo[i].belongCode = _pieceStatus[i].ownedStatus;
-                pieceSaveInfo[i].positionX = _pieces[i].Position.x;
-                pieceSaveInfo[i].positionY = _pieces[i].Position.y;
-                pieceSaveInfo[i].basePositionX = _pieceStatus[i].basePosition.x;
-                pieceSaveInfo[i].basePositionY = _pieceStatus[i].basePosition.y;
-                pieceSaveInfo[i].neighbours = _pieceStatus[i].neighbours.ToArray();
-                pieceSaveInfo[i].canPut = _pieceStatus[i].canPut;
+                pieceSaveInfo[i] = new PieceSaveInfo
+                {
+                    belongCode = _pieceStatus[i].ownedStatus,
+                    positionX = _pieces[i].Position.x,
+                    positionY = _pieces[i].Position.y,
+                    basePositionX = _pieceStatus[i].basePosition.x,
+                    basePositionY = _pieceStatus[i].basePosition.y,
+                    neighbours = _pieceStatus[i].neighbours.ToArray(),
+                    canPut = _pieceStatus[i].canPut
+                };
             }
 
             var saveData = new PicturePieceSaveInfo
